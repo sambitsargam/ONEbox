@@ -10,7 +10,8 @@ import { useCurrentAccount } from "@onelabs/dapp-kit"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Wallet, Zap, Code, History, Coins, TestTube } from "lucide-react"
+import { ArrowRight, Wallet, Zap, Code, History, Coins, TestTube, Bot, MessageCircle } from "lucide-react"
+import Link from "next/link"
 
 export default function HomePage() {
   const currentAccount = useCurrentAccount()
@@ -77,31 +78,31 @@ export default function HomePage() {
                 </p>
               </Card>
               <Card className="p-6 hover:shadow-lg transition-shadow">
-                <TestTube className="h-10 w-10 text-purple-600 mb-4" />
+                <Bot className="h-10 w-10 text-purple-600 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">AI Assistant</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
+                  ChatGPT-powered assistant for OneChain development questions
+                </p>
+              </Card>
+              <Card className="p-6 hover:shadow-lg transition-shadow">
+                <TestTube className="h-10 w-10 text-emerald-600 mb-4" />
                 <h3 className="text-lg font-semibold mb-2">PTB Simulator</h3>
                 <p className="text-slate-600 dark:text-slate-300 text-sm">
                   Test programmable transaction blocks before deployment
                 </p>
               </Card>
               <Card className="p-6 hover:shadow-lg transition-shadow">
-                <Coins className="h-10 w-10 text-emerald-600 mb-4" />
+                <Coins className="h-10 w-10 text-orange-600 mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Testnet Faucet</h3>
                 <p className="text-slate-600 dark:text-slate-300 text-sm">
                   Get test tokens instantly for development and testing
                 </p>
               </Card>
               <Card className="p-6 hover:shadow-lg transition-shadow">
-                <History className="h-10 w-10 text-orange-600 mb-4" />
+                <History className="h-10 w-10 text-red-600 mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Transaction History</h3>
                 <p className="text-slate-600 dark:text-slate-300 text-sm">
                   Comprehensive transaction tracking and analysis
-                </p>
-              </Card>
-              <Card className="p-6 hover:shadow-lg transition-shadow">
-                <Zap className="h-10 w-10 text-yellow-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Real-time Updates</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Live balance updates and transaction monitoring
                 </p>
               </Card>
               <Card className="p-6 hover:shadow-lg transition-shadow">
@@ -130,6 +131,40 @@ export default function HomePage() {
 
           {/* Right Column */}
           <div className="space-y-6 lg:space-y-8">
+            {/* Chat AI Card */}
+            <Card className="shadow-sm border-slate-200/60 bg-white/60 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/60">
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Bot className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">OneChain AI Assistant</h3>
+                  <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs">
+                    ChatGPT Powered
+                  </Badge>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                  Get instant help with OneChain development, Move programming, PTBs, and more. Powered by ChatGPT with comprehensive OneChain knowledge.
+                </p>
+                <div className="space-y-3">
+                  <div className="text-xs text-slate-500 dark:text-slate-400">
+                    Ask me about:
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="text-xs">Move Programming</Badge>
+                    <Badge variant="outline" className="text-xs">PTB Development</Badge>
+                    <Badge variant="outline" className="text-xs">Wallet Integration</Badge>
+                    <Badge variant="outline" className="text-xs">Smart Contracts</Badge>
+                  </div>
+                  <Link href="/chat">
+                    <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Start Chat with AI
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
+            
             <PTBSection />
             <TransactionSection />
           </div>
