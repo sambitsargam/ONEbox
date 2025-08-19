@@ -102,7 +102,7 @@ export function PTBSection() {
       })
     },
     onSuccess: (result: any) => {
-      toast.success(`Transaction executed! Digest: ${result.digest}`)
+      toast.success(`Simulation executed! Digest: ${result.digest}`)
     },
     onError: (error) => {
       console.error('Execution error:', error)
@@ -192,10 +192,10 @@ export function PTBSection() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
             <Code2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-            PTB Builder
+            PTB Simulator
           </CardTitle>
           <CardDescription className="text-slate-600 dark:text-slate-400">
-            Build and simulate Programmable Transaction Blocks
+            Build and simulate Programmable Transaction Blocks for development testing
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -213,7 +213,8 @@ export function PTBSection() {
             </div>
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-500">
-            <p>Available presets: OCT Transfer, Move Call + Transfer</p>
+            <p><strong>Developer Tool:</strong> This is a PTB simulator for testing transaction logic.</p>
+            <p>Available presets: OCT Transfer, Move Call, Developer Demo</p>
           </div>
         </CardContent>
       </Card>
@@ -225,10 +226,10 @@ export function PTBSection() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
           <Code2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-          PTB Builder
+          PTB Simulator
         </CardTitle>
         <CardDescription className="text-slate-600 dark:text-slate-400">
-          Build and simulate Programmable Transaction Blocks
+          Build and simulate Programmable Transaction Blocks for development testing
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -370,12 +371,12 @@ export function PTBSection() {
                 {executeMutation.isPending ? (
                   <>
                     <Send className="h-4 w-4 mr-2 animate-spin" />
-                    Executing...
+                    Simulating...
                   </>
                 ) : (
                   <>
                     <Send className="h-4 w-4 mr-2" />
-                    Execute
+                    Run Simulation
                   </>
                 )}
               </Button>
@@ -423,7 +424,7 @@ export function PTBSection() {
             {/* Execution Results */}
             {executionResult && (
               <div className="space-y-2">
-                <Label>Execution Result</Label>
+                <Label>Simulation Execution Result</Label>
                 <div
                   className={`rounded-lg border p-4 ${
                     executionResult.error
@@ -443,7 +444,7 @@ export function PTBSection() {
                       ) : (
                         <div>
                           <p className="text-sm font-medium text-green-800 dark:text-green-200 mb-2">
-                            Transaction executed successfully!
+                            Simulation executed successfully!
                           </p>
                           <div className="text-xs text-green-600 dark:text-green-400 space-y-1">
                             <div className="flex items-center gap-2">
@@ -469,8 +470,17 @@ export function PTBSection() {
 
             {!simulationResult && !executionResult && (
               <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                <p className="text-sm">No results yet</p>
-                <p className="text-xs">Run a simulation or execute a transaction to see results</p>
+                <p className="text-sm">No simulation results yet</p>
+                <p className="text-xs">Choose a preset or build custom steps to simulate PTB execution</p>
+                <div className="mt-4 text-xs">
+                  <p className="font-medium mb-2">Developer Testing Ideas:</p>
+                  <ul className="text-left space-y-1 max-w-md mx-auto">
+                    <li>• Test coin splitting and transfers</li>
+                    <li>• Simulate Move contract calls</li>
+                    <li>• Validate gas budget calculations</li>
+                    <li>• Debug complex transaction flows</li>
+                  </ul>
+                </div>
               </div>
             )}
           </TabsContent>

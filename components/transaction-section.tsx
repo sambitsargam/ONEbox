@@ -89,7 +89,7 @@ export function TransactionSection() {
   const openInExplorer = (digest: string) => {
     // Use OneChain explorer URL
     if (digest) {
-      window.open(`https://onescan.cc/testnet/tx/${digest}`, "_blank")
+      window.open(`https://onescan.cc/testnet/transactionBlocksDetail?digest=${digest}`, "_blank")
     } else {
       window.open(`https://onescan.cc/testnet/home`, "_blank")
     }
