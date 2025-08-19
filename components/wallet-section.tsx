@@ -194,7 +194,7 @@ export function WalletSection() {
             {/* Connect Wallet */}
             <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                {wallets.length > 0 ? "No wallet connected" : "No wallet detected"}
+                No wallet connected
               </p>
               
               {wallets.length > 0 ? (
