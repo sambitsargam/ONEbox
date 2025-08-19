@@ -21,6 +21,7 @@ export function FaucetSection() {
     success: boolean
     txDigest?: string
     amount?: number
+    task?: string
     error?: string
   } | null>(null)
 
@@ -31,7 +32,7 @@ export function FaucetSection() {
     onSuccess: (data) => {
       console.log('Faucet success response:', data)
       
-      // Check if we have transferred gas objects
+      // Check if we have transferred gas objects (immediate response)
       const transferredObject = data.transferredGasObjects?.[0]
       
       if (transferredObject) {
@@ -41,20 +42,27 @@ export function FaucetSection() {
           amount: transferredObject.amount,
         })
         toast.success(`Successfully received ${transferredObject.amount} OCT tokens!`)
-      } else if (data.status === "success" || data.message) {
-        // Handle cases where faucet returns success but no gas objects
+      } else if (data.task && data.error === null) {
+        // OneChain faucet returns a task ID - this means the request was accepted
         setLastRequestResult({
           success: true,
-          error: data.message || "Faucet request completed successfully, but no gas objects were transferred. This might indicate rate limiting or account already funded.",
+          task: data.task,
+        })
+        toast.success("Faucet request submitted successfully! Tokens should arrive shortly.")
+      } else if (data.status === "success" || data.message) {
+        // Handle other success cases
+        setLastRequestResult({
+          success: true,
+          error: data.message || "Faucet request completed successfully.",
         })
         toast.success(data.message || "Faucet request completed successfully!")
       } else {
-        // No gas objects and no success status
+        // No clear success indicator
         setLastRequestResult({
           success: false,
-          error: "No gas objects transferred. You may have already received tokens recently or hit the rate limit.",
+          error: "Unexpected response format from faucet. Please try again.",
         })
-        toast.error("No gas objects transferred. Please try again later or check if you've already received tokens recently.")
+        toast.error("Unexpected response from faucet. Please try again.")
       }
       
       // Clear the input if it was using the connected wallet address
@@ -184,12 +192,27 @@ export function FaucetSection() {
               <div className="flex-1 min-w-0">
                 {lastRequestResult.success ? (
                   <div>
-                    <p className="text-sm font-medium text-green-800 dark:text-green-200">
-                      Success! Received {lastRequestResult.amount} OCT
-                    </p>
+                    {lastRequestResult.amount ? (
+                      <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                        Success! Received {lastRequestResult.amount} OCT
+                      </p>
+                    ) : lastRequestResult.task ? (
+                      <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                        Faucet request submitted! Tokens will arrive shortly.
+                      </p>
+                    ) : (
+                      <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                        Request completed successfully!
+                      </p>
+                    )}
                     {lastRequestResult.txDigest && (
                       <p className="text-xs text-green-600 dark:text-green-400 font-mono mt-1 break-all">
                         TX: {lastRequestResult.txDigest}
+                      </p>
+                    )}
+                    {lastRequestResult.task && (
+                      <p className="text-xs text-green-600 dark:text-green-400 font-mono mt-1 break-all">
+                        Task ID: {lastRequestResult.task}
                       </p>
                     )}
                   </div>
