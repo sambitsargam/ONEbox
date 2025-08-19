@@ -133,8 +133,8 @@ export default function ChatPage({}: ChatPageProps) {
         if (inCodeBlock) {
           // End code block
           elements.push(
-            <pre key={elements.length} className="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto my-2 max-w-full">
-              <code className={`language-${codeLanguage} text-xs leading-relaxed block`}>
+            <pre key={elements.length} className="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto my-2 w-full max-w-full">
+              <code className={`language-${codeLanguage} text-xs leading-relaxed block whitespace-pre-wrap`}>
                 {currentElement.join('\n')}
               </code>
             </pre>
@@ -238,8 +238,8 @@ export default function ChatPage({}: ChatPageProps) {
     if (currentElement.length > 0) {
       if (inCodeBlock) {
         elements.push(
-          <pre key={elements.length} className="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto my-2 max-w-full">
-            <code className={`language-${codeLanguage} text-xs leading-relaxed block`}>
+          <pre key={elements.length} className="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto my-2 w-full max-w-full">
+            <code className={`language-${codeLanguage} text-xs leading-relaxed block whitespace-pre-wrap`}>
               {currentElement.join('\n')}
             </code>
           </pre>
@@ -266,7 +266,7 @@ export default function ChatPage({}: ChatPageProps) {
       }
     }
 
-    return <div>{elements}</div>
+    return <div className="space-y-2 w-full overflow-hidden">{elements}</div>
   }
 
   return (
@@ -302,7 +302,7 @@ export default function ChatPage({}: ChatPageProps) {
 
       {/* Chat Interface */}
       <main className="container mx-auto px-4 py-6 max-w-4xl">
-        <Card className="h-[calc(100vh-12rem)] flex flex-col shadow-lg border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
+<Card className="flex flex-col shadow-lg border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
           <CardHeader className="flex-shrink-0 pb-4 border-b border-slate-200 dark:border-slate-700">
             <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
               <Bot className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -328,7 +328,7 @@ export default function ChatPage({}: ChatPageProps) {
               className="flex-1 overflow-y-auto px-6 scroll-smooth"
               onScroll={handleScroll}
             >
-              <div className="space-y-6 py-4">
+              <div className="space-y-6 py-4 pb-8">
                 {messages.map((message) => (
                   <div key={message.id} className="space-y-2">
                     <div className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -340,13 +340,13 @@ export default function ChatPage({}: ChatPageProps) {
                         {message.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                       </div>
                       
-                      <div className={`flex-1 max-w-[85%] ${message.role === 'user' ? 'text-right' : ''}`}>
-                        <div className={`rounded-xl px-4 py-3 shadow-sm border ${
+                      <div className={`flex-1 ${message.role === 'user' ? 'text-right flex justify-end' : 'max-w-[85%]'}`}>
+                        <div className={`rounded-xl px-4 py-3 shadow-sm border overflow-hidden ${
                           message.role === 'user'
-                            ? 'bg-blue-600 text-white ml-auto max-w-fit border-blue-600'
-                            : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-700'
+                            ? 'bg-blue-600 text-white max-w-[85%] border-blue-600'
+                            : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-700 w-full'
                         }`}>
-                          <div className="text-sm leading-relaxed break-words">
+                          <div className="text-sm leading-relaxed break-words overflow-hidden">
                             {message.role === 'assistant' ? formatContent(message.content) : message.content}
                           </div>
                         </div>
@@ -359,18 +359,18 @@ export default function ChatPage({}: ChatPageProps) {
 
                     {/* Suggestions */}
                     {message.suggestions && message.role === 'assistant' && (
-                      <div className="ml-11 space-y-3 mt-3">
+                      <div className="ml-11 space-y-2 mt-3 max-w-[85%]">
                         <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                           <Lightbulb className="h-3 w-3" />
                           Try asking:
                         </div>
-                        <div className="flex flex-wrap gap-2 max-w-full">
+                        <div className="flex flex-wrap gap-2">
                           {message.suggestions.map((suggestion, index) => (
                             <Button
                               key={index}
                               variant="outline"
                               size="sm"
-                              className="h-auto py-2 px-3 text-xs leading-tight max-w-full text-left whitespace-normal"
+                              className="h-auto py-1.5 px-3 text-xs leading-tight text-left whitespace-normal break-words"
                               onClick={() => handleSuggestionClick(suggestion)}
                             >
                               {suggestion}
