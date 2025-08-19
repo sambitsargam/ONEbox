@@ -117,6 +117,11 @@ export function createTransactionFromSteps(steps: PTBStep[], params: Record<stri
   const tx = new Transaction()
   const variables: Record<string, any> = {}
 
+  // Set the sender address - this is crucial for OneChain transactions
+  if (params.address) {
+    tx.setSender(params.address)
+  }
+
   // Set a reasonable gas budget for OneChain
   tx.setGasBudget(20000000)
 
