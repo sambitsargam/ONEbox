@@ -10,10 +10,10 @@ import { useCurrentAccount } from "@onelabs/dapp-kit"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Wallet, Zap, Code, History, Coins, TestTube, Bot, MessageCircle } from "lucide-react"
+import { ArrowLeft, Bot, MessageCircle, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
-export default function HomePage() {
+export default function DashboardPage() {
   const currentAccount = useCurrentAccount()
 
   return (
@@ -22,9 +22,17 @@ export default function HomePage() {
       <header className="sticky top-0 z-40 border-b border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">ONEbox</h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400">OneChain Development Portal</p>
+            <div className="flex items-center gap-4">
+              <Link href="/">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Home
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">ONEbox Dashboard</h1>
+                <p className="text-sm text-slate-600 dark:text-slate-400">OneChain Development Portal</p>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
@@ -40,96 +48,6 @@ export default function HomePage() {
           </div>
         </div>
       </header>
-
-      {/* Hero Section */}
-      {!currentAccount && (
-        <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-          <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
-          <div className="relative container mx-auto px-4 py-16 sm:py-24">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl dark:text-white">
-                Build on{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  OneChain
-                </span>
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-                Complete development toolkit for OneChain blockchain. Test transactions, manage wallets, 
-                explore the ecosystem, and build the future of decentralized applications.
-              </p>
-              <div className="mt-10 flex items-center justify-center gap-x-6">
-                <Button 
-                  size="lg" 
-                  className="bg-blue-600 hover:bg-blue-700"
-                  onClick={() => {
-                    const walletSection = document.querySelector('#wallet-section');
-                    if (walletSection) {
-                      walletSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
-                >
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Link href="/docs">
-                  <Button 
-                    variant="outline" 
-                    size="lg"
-                  >
-                    View Documentation
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Feature Cards */}
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="p-6 hover:shadow-lg transition-shadow">
-                <Wallet className="h-10 w-10 text-blue-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Wallet Integration</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Connect and manage OneChain wallets with seamless integration
-                </p>
-              </Card>
-              <Card className="p-6 hover:shadow-lg transition-shadow">
-                <Bot className="h-10 w-10 text-purple-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">AI Assistant</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  ChatGPT-powered assistant for OneChain development questions
-                </p>
-              </Card>
-              <Card className="p-6 hover:shadow-lg transition-shadow">
-                <TestTube className="h-10 w-10 text-emerald-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">PTB Simulator</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Test programmable transaction blocks before deployment
-                </p>
-              </Card>
-              <Card className="p-6 hover:shadow-lg transition-shadow">
-                <Coins className="h-10 w-10 text-orange-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Testnet Faucet</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Get test tokens instantly for development and testing
-                </p>
-              </Card>
-              <Card className="p-6 hover:shadow-lg transition-shadow">
-                <History className="h-10 w-10 text-red-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Transaction History</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Comprehensive transaction tracking and analysis
-                </p>
-              </Card>
-              <Card className="p-6 hover:shadow-lg transition-shadow">
-                <Code className="h-10 w-10 text-indigo-600 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Developer Tools</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Advanced debugging and development utilities
-                </p>
-              </Card>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">

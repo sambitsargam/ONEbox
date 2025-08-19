@@ -12,12 +12,6 @@ export const metadata: Metadata = {
   generator: "v0.app",
   keywords: ["OneChain", "blockchain", "development", "testnet", "PTB", "wallet", "AI", "ChatGPT"],
   authors: [{ name: "ONEbox Team" }],
-  icons: {
-    icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' }
-    ],
-  },
 }
 
 export const viewport = {
