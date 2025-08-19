@@ -4,9 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
-import { Send, Bot, User, Lightbulb, ArrowLeft, Zap } from "lucide-react"
+import { Send, Bot, User, Lightbulb, ArrowLeft, Zap, ArrowDown } from "lucide-react"
 import Link from "next/link"
 import { searchOneChainKnowledge } from "@/lib/chat-ai"
 
@@ -37,15 +36,26 @@ export default function ChatPage({}: ChatPageProps) {
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    setShouldAutoScroll(true)
+  }
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget
+    const isNearBottom = scrollHeight - scrollTop - clientHeight < 100
+    setShouldAutoScroll(isNearBottom)
   }
 
   useEffect(() => {
-    scrollToBottom()
+    if (shouldAutoScroll) {
+      scrollToBottom()
+    }
   }, [messages])
 
   const formatTime = (timestamp: string) => {
@@ -69,6 +79,7 @@ export default function ChatPage({}: ChatPageProps) {
     setMessages(prev => [...prev, userMessage])
     setInput('')
     setIsLoading(true)
+    setShouldAutoScroll(true) // Enable auto-scroll when sending a message
 
     try {
       const response = await searchOneChainKnowledge(input.trim())
@@ -122,8 +133,8 @@ export default function ChatPage({}: ChatPageProps) {
         if (inCodeBlock) {
           // End code block
           elements.push(
-            <pre key={elements.length} className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto my-3 border border-slate-200 dark:border-slate-700">
-              <code className={`language-${codeLanguage} text-sm`}>
+            <pre key={elements.length} className="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto my-2 max-w-full">
+              <code className={`language-${codeLanguage} text-xs leading-relaxed block`}>
                 {currentElement.join('\n')}
               </code>
             </pre>
@@ -227,8 +238,8 @@ export default function ChatPage({}: ChatPageProps) {
     if (currentElement.length > 0) {
       if (inCodeBlock) {
         elements.push(
-          <pre key={elements.length} className="bg-gray-900 text-gray-100 p-3 rounded-md overflow-x-auto my-2">
-            <code className={`language-${codeLanguage}`}>
+          <pre key={elements.length} className="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto my-2 max-w-full">
+            <code className={`language-${codeLanguage} text-xs leading-relaxed block`}>
               {currentElement.join('\n')}
             </code>
           </pre>
@@ -299,9 +310,24 @@ export default function ChatPage({}: ChatPageProps) {
             </CardTitle>
           </CardHeader>
           
-          <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+          <CardContent className="flex-1 flex flex-col p-0 relative">
+            {/* Scroll to bottom button */}
+            {!shouldAutoScroll && (
+              <Button
+                onClick={scrollToBottom}
+                size="sm"
+                className="absolute bottom-20 right-6 z-10 rounded-full w-10 h-10 p-0 bg-blue-600 hover:bg-blue-700 shadow-lg"
+              >
+                <ArrowDown className="h-4 w-4" />
+              </Button>
+            )}
+            
             {/* Messages */}
-            <ScrollArea className="flex-1 px-6">
+            <div 
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto px-6 scroll-smooth"
+              onScroll={handleScroll}
+            >
               <div className="space-y-6 py-4">
                 {messages.map((message) => (
                   <div key={message.id} className="space-y-2">
@@ -314,13 +340,13 @@ export default function ChatPage({}: ChatPageProps) {
                         {message.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                       </div>
                       
-                      <div className={`flex-1 max-w-[80%] ${message.role === 'user' ? 'text-right' : ''}`}>
-                        <div className={`rounded-xl px-4 py-3 shadow-sm ${
+                      <div className={`flex-1 max-w-[85%] ${message.role === 'user' ? 'text-right' : ''}`}>
+                        <div className={`rounded-xl px-4 py-3 shadow-sm border ${
                           message.role === 'user'
-                            ? 'bg-blue-600 text-white ml-auto max-w-fit'
-                            : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700'
+                            ? 'bg-blue-600 text-white ml-auto max-w-fit border-blue-600'
+                            : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-700'
                         }`}>
-                          <div className="text-sm leading-relaxed">
+                          <div className="text-sm leading-relaxed break-words">
                             {message.role === 'assistant' ? formatContent(message.content) : message.content}
                           </div>
                         </div>
@@ -333,18 +359,18 @@ export default function ChatPage({}: ChatPageProps) {
 
                     {/* Suggestions */}
                     {message.suggestions && message.role === 'assistant' && (
-                      <div className="ml-11 space-y-2">
+                      <div className="ml-11 space-y-3 mt-3">
                         <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                           <Lightbulb className="h-3 w-3" />
                           Try asking:
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 max-w-full">
                           {message.suggestions.map((suggestion, index) => (
                             <Button
                               key={index}
                               variant="outline"
                               size="sm"
-                              className="h-auto py-1 px-2 text-xs"
+                              className="h-auto py-2 px-3 text-xs leading-tight max-w-full text-left whitespace-normal"
                               onClick={() => handleSuggestionClick(suggestion)}
                             >
                               {suggestion}
@@ -377,7 +403,7 @@ export default function ChatPage({}: ChatPageProps) {
                 
                 <div ref={messagesEndRef} />
               </div>
-            </ScrollArea>
+            </div>
 
             {/* Input */}
             <div className="border-t border-slate-200 dark:border-slate-700 p-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
