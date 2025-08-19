@@ -68,9 +68,9 @@ export default function DocsPage() {
                 </p>
               </div>
               
-              <Link href="/">
+              <Link href="/dashboard">
                 <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                  Start Building
+                  Go to Dashboard
                 </Button>
               </Link>
             </CardContent>
