@@ -9,7 +9,7 @@ import { Wallet, Copy, LogOut, Network } from "lucide-react"
 import { toast } from "sonner"
 import { ONECHAIN_NETWORKS, type NetworkType } from "@/lib/onechain-config"
 import { logWalletDebugInfo } from "@/lib/wallet-utils"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export function WalletSection() {
   const currentAccount = useCurrentAccount()
@@ -17,33 +17,50 @@ export function WalletSection() {
   const { mutate: disconnect } = useDisconnectWallet()
   const { selectNetwork, network } = useSuiClientContext()
   const wallets = useWallets()
+  const [isClient, setIsClient] = useState(false)
+
+  // Ensure we're on the client side to prevent hydration mismatch
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   // Debug logging
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development' && isClient) {
       logWalletDebugInfo()
       console.log('Available wallets from useWallets:', wallets)
     }
-  }, [wallets])
+  }, [wallets, isClient])
 
   const handleConnect = async () => {
     try {
-      // Find the first available wallet
-      const availableWallet = wallets.find(wallet => {
-        // Check if wallet has connect feature and is properly initialized
-        return wallet && wallet.features && wallet.features['standard:connect']
+      // Prioritize OneChain wallet detection
+      let availableWallet = wallets.find(wallet => {
+        return wallet && wallet.name && (
+          wallet.name.toLowerCase().includes('onechain') ||
+          wallet.name.toLowerCase().includes('onelabs')
+        ) && wallet.features && wallet.features['standard:connect']
       })
       
+      // Fallback to any wallet with connect feature
       if (!availableWallet) {
-        toast.error("No compatible wallet found. Please install a Sui-compatible wallet.")
+        availableWallet = wallets.find(wallet => {
+          return wallet && wallet.features && wallet.features['standard:connect']
+        })
+      }
+      
+      if (!availableWallet) {
+        toast.error("No OneChain wallet found. Please install the OneChain wallet extension.")
         return
       }
+
+      console.log('Connecting to wallet:', availableWallet.name)
 
       connect(
         { wallet: availableWallet },
         {
           onSuccess: () => {
-            toast.success(`Wallet connected successfully!`)
+            toast.success(`Connected to ${availableWallet.name} successfully!`)
           },
           onError: (error) => {
             console.error("Wallet connection error:", error)
@@ -79,6 +96,29 @@ export function WalletSection() {
     return `${address.slice(0, 6)}...${address.slice(-4)}`
   }
 
+  // Show loading state during hydration to prevent mismatch
+  if (!isClient) {
+    return (
+      <Card className="shadow-sm border-slate-200/60 bg-white/60 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/60">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+            <Wallet className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            Wallet Connection
+          </CardTitle>
+          <CardDescription className="text-slate-600 dark:text-slate-400">
+            Connect your OneChain wallet to start building on OneChain network
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">Loading...</p>
+            <div className="w-full h-10 bg-slate-200 dark:bg-slate-700 rounded animate-pulse"></div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="shadow-sm border-slate-200/60 bg-white/60 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/60">
       <CardHeader>
@@ -87,7 +127,7 @@ export function WalletSection() {
           Wallet Connection
         </CardTitle>
         <CardDescription className="text-slate-600 dark:text-slate-400">
-          Connect your wallet to start building on OneChain
+          Connect your OneChain wallet to start building on OneChain network
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -159,24 +199,31 @@ export function WalletSection() {
               
               {wallets.length > 0 ? (
                 <Button onClick={handleConnect} className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
-                  Connect Wallet
+                  Connect OneChain Wallet
                 </Button>
               ) : (
                 <div className="space-y-2">
                   <p className="text-xs text-slate-500 dark:text-slate-500">
-                    Please install a Sui-compatible wallet like:
+                    Please install the OneChain wallet extension:
                   </p>
                   <ul className="text-xs text-slate-500 dark:text-slate-500 list-disc list-inside space-y-1">
-                    <li>Sui Wallet</li>
-                    <li>Ethos Wallet</li>
-                    <li>Suiet Wallet</li>
+                    <li>OneChain Wallet Extension</li>
+                    <li>OneLabs Wallet (if available)</li>
                   </ul>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full mt-2"
+                    onClick={() => window.open('https://chrome.google.com/webstore', '_blank')}
+                  >
+                    Install OneChain Wallet
+                  </Button>
                 </div>
               )}
             </div>
 
             <div className="text-xs text-slate-500 dark:text-slate-500">
-              <p>Supported networks: OneChain Testnet, Localnet</p>
+              <p>Supported networks: OneChain Testnet, OneChain Localnet</p>
               {wallets.length > 0 && (
                 <p className="mt-1">Detected wallets: {wallets.map(w => w.name).join(", ")}</p>
               )}
