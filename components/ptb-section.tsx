@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from "@onelabs/dapp-kit"
 import { useMutation } from "@tanstack/react-query"
-import { Code2, Play, Send, Plus, Trash2, Copy, AlertCircle, CheckCircle } from "lucide-react"
+import { Code2, Play, Send, Plus, Trash2, Copy, AlertCircle, CheckCircle, ExternalLink } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 import { PTB_PRESETS, createTransactionFromSteps, type PTBStep } from "@/lib/ptb-presets"
@@ -119,6 +119,7 @@ export function PTBSection() {
           {
             onSuccess: (result) => {
               console.log('Transaction execution result:', result)
+              console.log('Result structure:', JSON.stringify(result, null, 2))
               setExecutionResult(result)
               resolve(result)
             },
@@ -131,7 +132,9 @@ export function PTBSection() {
       })
     },
     onSuccess: (result: any) => {
-      toast.success(`Transaction executed! Digest: ${result.digest}`)
+      const gasUsed = result.effects?.gasUsed?.computationCost || result.gasUsed?.computationCost || "Unknown"
+      const gasFormatted = gasUsed !== "Unknown" ? Number(gasUsed).toLocaleString() : gasUsed
+      toast.success(`Transaction executed! Gas: ${gasFormatted}`)
     },
     onError: (error) => {
       console.error('Execution error:', error)
@@ -520,8 +523,82 @@ export function PTBSection() {
                               >
                                 <Copy className="h-3 w-3" />
                               </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => window.open(`https://onescan.cc/testnet/transactionBlocksDetail?digest=${executionResult.digest}`, "_blank")}
+                                className="h-4 w-4 p-0"
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                              </Button>
                             </div>
-                            <p>Gas used: {executionResult.effects?.gasUsed?.computationCost || "N/A"}</p>
+                            <p>Gas used: {
+                              executionResult.effects?.gasUsed?.computationCost 
+                                ? Number(executionResult.effects.gasUsed.computationCost).toLocaleString()
+                                : executionResult.gasUsed?.computationCost
+                                  ? Number(executionResult.gasUsed.computationCost).toLocaleString()
+                                  : "N/A"
+                            }</p>
+                            {executionResult.effects?.gasUsed && (
+                              <div className="mt-2 space-y-1">
+                                <p className="font-medium">Gas Breakdown:</p>
+                                <p>• Computation: {Number(executionResult.effects.gasUsed.computationCost || 0).toLocaleString()}</p>
+                                <p>• Storage: {Number(executionResult.effects.gasUsed.storageCost || 0).toLocaleString()}</p>
+                                <p>• Storage Rebate: {Number(executionResult.effects.gasUsed.storageRebate || 0).toLocaleString()}</p>
+                                <p>• Total: {
+                                  (Number(executionResult.effects.gasUsed.computationCost || 0) + 
+                                   Number(executionResult.effects.gasUsed.storageCost || 0) - 
+                                   Number(executionResult.effects.gasUsed.storageRebate || 0)).toLocaleString()
+                                }</p>
+                              </div>
+                            )}
+                            {executionResult.effects?.status && (
+                              <p>Status: {executionResult.effects.status.status || executionResult.effects.status}</p>
+                            )}
+                            {executionResult.effects?.created && executionResult.effects.created.length > 0 && (
+                              <div className="mt-2">
+                                <p className="font-medium">Objects Created: {executionResult.effects.created.length}</p>
+                              </div>
+                            )}
+                            {executionResult.effects?.mutated && executionResult.effects.mutated.length > 0 && (
+                              <div className="mt-2">
+                                <p className="font-medium">Objects Modified: {executionResult.effects.mutated.length}</p>
+                              </div>
+                            )}
+                            {executionResult.balanceChanges && executionResult.balanceChanges.length > 0 && (
+                              <div className="mt-2">
+                                <p className="font-medium">Balance Changes:</p>
+                                {executionResult.balanceChanges.map((change: any, index: number) => (
+                                  <p key={index} className={`${
+                                    Number(change.amount) > 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                                  }`}>
+                                    {change.coinType === "0x2::sui::SUI" ? "OCT" : "Token"}: 
+                                    {Number(change.amount) > 0 ? "+" : ""}{(Number(change.amount) / 1e9).toFixed(4)} OCT
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+                            <div className="mt-2 pt-2 border-t border-green-200 dark:border-green-800">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => window.open(`https://onescan.cc/testnet/transactionBlocksDetail?digest=${executionResult.digest}`, "_blank")}
+                                className="text-green-700 border-green-300 hover:bg-green-100 dark:text-green-300 dark:border-green-700 dark:hover:bg-green-900/20"
+                              >
+                                <ExternalLink className="h-3 w-3 mr-1" />
+                                View on OneChain Explorer
+                              </Button>
+                              {process.env.NODE_ENV === 'development' && (
+                                <details className="mt-2">
+                                  <summary className="cursor-pointer text-xs text-slate-500 hover:text-slate-700">
+                                    🔍 Debug: Raw Result Data
+                                  </summary>
+                                  <pre className="mt-2 p-2 bg-slate-100 dark:bg-slate-800 rounded text-xs overflow-auto max-h-40">
+                                    {JSON.stringify(executionResult, null, 2)}
+                                  </pre>
+                                </details>
+                              )}
+                            </div>
                           </div>
                         </div>
                       )}
