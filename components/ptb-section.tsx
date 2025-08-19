@@ -31,14 +31,27 @@ export function PTBSection() {
   const simulateMutation = useMutation({
     mutationFn: async (steps: PTBStep[]) => {
       if (!currentAccount?.address) throw new Error("No wallet connected")
+      
+      // Validate recipient address for transfer operations
+      const hasTransfer = steps.some(step => step.type === "transferObjects")
+      if (hasTransfer && !params.recipient) {
+        throw new Error("Recipient address is required for transfer operations")
+      }
 
       const tx = createTransactionFromSteps(steps, {
         ...params,
         address: currentAccount.address,
       })
 
+      console.log('Built transaction for simulation:', tx)
+
+      // For OneChain, build the transaction first
+      const builtTx = await tx.build({
+        client: suiClient,
+      })
+
       const result = await suiClient.dryRunTransactionBlock({
-        transactionBlock: await tx.build({ client: suiClient }),
+        transactionBlock: builtTx,
       })
 
       return result
@@ -48,6 +61,7 @@ export function PTBSection() {
       toast.success("Transaction simulation completed!")
     },
     onError: (error) => {
+      console.error('Simulation error:', error)
       toast.error(`Simulation failed: ${error.message}`)
       setSimulationResult({ error: error.message })
     },
@@ -57,20 +71,32 @@ export function PTBSection() {
     mutationFn: async (steps: PTBStep[]) => {
       if (!currentAccount?.address) throw new Error("No wallet connected")
 
+      // Validate recipient address for transfer operations
+      const hasTransfer = steps.some(step => step.type === "transferObjects")
+      if (hasTransfer && !params.recipient) {
+        throw new Error("Recipient address is required for transfer operations")
+      }
+
       const tx = createTransactionFromSteps(steps, {
         ...params,
         address: currentAccount.address,
       })
+
+      console.log('Built transaction for execution:', tx)
 
       return new Promise((resolve, reject) => {
         signAndExecute(
           { transaction: tx },
           {
             onSuccess: (result) => {
+              console.log('Transaction execution result:', result)
               setExecutionResult(result)
               resolve(result)
             },
-            onError: reject,
+            onError: (error) => {
+              console.error('Transaction execution error:', error)
+              reject(error)
+            },
           },
         )
       })
@@ -79,6 +105,7 @@ export function PTBSection() {
       toast.success(`Transaction executed! Digest: ${result.digest}`)
     },
     onError: (error) => {
+      console.error('Execution error:', error)
       toast.error(`Execution failed: ${error.message}`)
       setExecutionResult({ error: error.message })
     },
@@ -120,21 +147,37 @@ export function PTBSection() {
     return customSteps
   }
 
-  const handleSimulate = () => {
+  const validateTransaction = (): string | null => {
     const steps = getCurrentSteps()
     if (steps.length === 0) {
-      toast.error("No steps to simulate")
+      return "No steps to execute"
+    }
+
+    const hasTransfer = steps.some(step => step.type === "transferObjects")
+    if (hasTransfer && !params.recipient) {
+      return "Recipient address is required for transfer operations"
+    }
+
+    return null
+  }
+
+  const handleSimulate = () => {
+    const validationError = validateTransaction()
+    if (validationError) {
+      toast.error(validationError)
       return
     }
+    const steps = getCurrentSteps()
     simulateMutation.mutate(steps)
   }
 
   const handleExecute = () => {
-    const steps = getCurrentSteps()
-    if (steps.length === 0) {
-      toast.error("No steps to execute")
+    const validationError = validateTransaction()
+    if (validationError) {
+      toast.error(validationError)
       return
     }
+    const steps = getCurrentSteps()
     executeMutation.mutate(steps)
   }
 
@@ -201,14 +244,26 @@ export function PTBSection() {
               <h4 className="font-medium text-slate-900 dark:text-slate-100">Parameters</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="recipient">Recipient Address</Label>
+                  <Label htmlFor="recipient" className="flex items-center gap-2">
+                    Recipient Address
+                    {getCurrentSteps().some(step => step.type === "transferObjects") && (
+                      <span className="text-red-500 text-xs">*</span>
+                    )}
+                  </Label>
                   <Input
                     id="recipient"
                     value={params.recipient}
                     onChange={(e) => setParams({ ...params, recipient: e.target.value })}
                     placeholder="0x..."
-                    className="font-mono text-sm"
+                    className={`font-mono text-sm ${
+                      getCurrentSteps().some(step => step.type === "transferObjects") && !params.recipient
+                        ? "border-red-300 focus:border-red-500"
+                        : ""
+                    }`}
                   />
+                  {getCurrentSteps().some(step => step.type === "transferObjects") && !params.recipient && (
+                    <p className="text-xs text-red-600">Required for transfer operations</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="amount">Amount (MIST)</Label>
@@ -219,6 +274,7 @@ export function PTBSection() {
                     placeholder="1000000000"
                     className="font-mono text-sm"
                   />
+                  <p className="text-xs text-slate-500">1 OCT = 1,000,000,000 MIST</p>
                 </div>
               </div>
             </div>

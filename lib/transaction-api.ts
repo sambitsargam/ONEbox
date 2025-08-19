@@ -42,46 +42,60 @@ export async function fetchTransactionHistoryFromExplorer(
       method: "GET",
       headers: {
         "Accept": "application/json",
+        "Content-Type": "application/json",
       },
     })
 
     console.log('Explorer API response status:', response.status)
+    console.log('Explorer API response headers:', response.headers.get('content-type'))
 
     if (response.ok) {
-      const data = await response.json()
-      console.log('Explorer API response:', data)
+      const contentType = response.headers.get('content-type')
       
-      // Transform explorer data to our format
-      if (data && Array.isArray(data)) {
-        const transformedData = data.map((tx: any) => ({
-          digest: tx.hash || tx.digest || tx.id,
-          timestampMs: tx.timestamp ? (new Date(tx.timestamp).getTime()).toString() : null,
-          checkpoint: tx.checkpoint,
-          effects: {
-            status: { status: tx.status || 'success' },
-            gasUsed: tx.gasUsed || tx.gas
-          },
-          transaction: {
-            data: {
-              sender: tx.from || tx.sender,
-              gasData: {
-                budget: tx.gasLimit || tx.gasUsed?.computationCost
+      // Check if response is actually JSON
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json()
+        console.log('Explorer API response:', data)
+        
+        // Transform explorer data to our format
+        if (data && Array.isArray(data)) {
+          const transformedData = data.map((tx: any) => ({
+            digest: tx.hash || tx.digest || tx.id,
+            timestampMs: tx.timestamp ? (new Date(tx.timestamp).getTime()).toString() : null,
+            checkpoint: tx.checkpoint,
+            effects: {
+              status: { status: tx.status || 'success' },
+              gasUsed: tx.gasUsed || tx.gas
+            },
+            transaction: {
+              data: {
+                sender: tx.from || tx.sender,
+                gasData: {
+                  budget: tx.gasLimit || tx.gasUsed?.computationCost
+                }
               }
             }
+          }))
+          
+          return {
+            data: transformedData,
+            hasNextPage: false
           }
-        }))
-        
-        return {
-          data: transformedData,
-          hasNextPage: false
         }
+      } else {
+        console.warn('Explorer API returned HTML instead of JSON, API might not be available')
+        // Try alternative OneChain RPC endpoint for transactions
+        return await fetchTransactionHistory(address, network)
       }
+    } else {
+      console.warn('Explorer API request failed with status:', response.status)
     }
   } catch (error) {
     console.error('Explorer API error:', error)
   }
 
-  return { data: [], hasNextPage: false }
+  // Fallback to RPC if explorer API fails
+  return await fetchTransactionHistory(address, network)
 }
 
 export async function fetchTransactionHistory(

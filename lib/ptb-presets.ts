@@ -1,8 +1,8 @@
-import { Transaction } from "@mysten/sui/transactions"
+import { Transaction } from "@onelabs/sui/transactions"
 
 export interface PTBStep {
   id: string
-  type: "moveCall" | "transferObjects" | "assignVariable" | "setGasBudget"
+  type: "moveCall" | "transferObjects" | "assignVariable" | "setGasBudget" | "splitCoin"
   label: string
   data: any
 }
@@ -21,69 +21,38 @@ export const PTB_PRESETS: PTBPreset[] = [
     description: "Transfer OCT tokens to another address",
     steps: [
       {
-        id: "gas-budget",
-        type: "setGasBudget",
-        label: "Set Gas Budget",
-        data: { budget: "10000000" },
-      },
-      {
         id: "split-coin",
-        type: "moveCall",
-        label: "Split Coin",
+        type: "splitCoin",
+        label: "Split OCT Coin",
         data: {
-          target: "0x2::coin::split",
-          arguments: ["gas", "amount"],
-          typeArguments: ["0x2::sui::SUI"],
+          coin: "gas",
+          amount: "amount",
         },
       },
       {
         id: "transfer",
         type: "transferObjects",
-        label: "Transfer Objects",
+        label: "Transfer Split Coin",
         data: {
-          objects: ["splitCoin"],
+          objects: ["split-coin"],
           recipient: "recipient",
         },
       },
     ],
   },
   {
-    id: "move-call-transfer",
-    name: "Move Call + Transfer",
-    description: "Execute a move call and transfer the result",
+    id: "move-call-example",
+    name: "Move Call Example", 
+    description: "Example move call transaction",
     steps: [
-      {
-        id: "gas-budget",
-        type: "setGasBudget",
-        label: "Set Gas Budget",
-        data: { budget: "20000000" },
-      },
       {
         id: "move-call",
         type: "moveCall",
-        label: "Move Call",
+        label: "Example Move Call",
         data: {
           target: "0x2::coin::zero",
           arguments: [],
           typeArguments: ["0x2::sui::SUI"],
-        },
-      },
-      {
-        id: "assign-var",
-        type: "assignVariable",
-        label: "Assign Variable",
-        data: {
-          variable: "result",
-          value: "moveCallResult",
-        },
-      },
-      {
-        id: "transfer",
-        type: "transferObjects",
-        label: "Transfer Result",
-        data: {
-          objects: ["result"],
-          recipient: "recipient",
         },
       },
     ],
@@ -94,37 +63,64 @@ export function createTransactionFromSteps(steps: PTBStep[], params: Record<stri
   const tx = new Transaction()
   const variables: Record<string, any> = {}
 
-  for (const step of steps) {
-    switch (step.type) {
-      case "setGasBudget":
-        tx.setGasBudget(Number(step.data.budget))
-        break
+  // Set a reasonable gas budget for OneChain
+  tx.setGasBudget(20000000)
 
-      case "moveCall":
-        const result = tx.moveCall({
-          target: step.data.target,
-          arguments: step.data.arguments.map((arg: string) => {
+  for (const step of steps) {
+    try {
+      switch (step.type) {
+        case "setGasBudget":
+          tx.setGasBudget(Number(step.data.budget))
+          break
+
+        case "splitCoin":
+          // Use the new splitCoin method
+          const splitAmount = params.amount || step.data.amount || "1000000000"
+          const coinToSplit = step.data.coin === "gas" ? tx.gas : step.data.coin
+          const splitResult = tx.splitCoins(coinToSplit, [splitAmount])
+          variables[step.id] = splitResult[0]
+          break
+
+        case "moveCall":
+          const args = step.data.arguments?.map((arg: string) => {
             if (arg === "gas") return tx.gas
             if (arg === "amount") return params.amount || "1000000000"
             if (variables[arg]) return variables[arg]
             return arg
-          }),
-          typeArguments: step.data.typeArguments || [],
-        })
-        variables[step.id] = result
-        break
+          }) || []
 
-      case "transferObjects":
-        const objects = step.data.objects.map((obj: string) => {
-          if (variables[obj]) return variables[obj]
-          return obj
-        })
-        tx.transferObjects(objects, params.recipient || params.address)
-        break
+          const moveCallResult = tx.moveCall({
+            target: step.data.target,
+            arguments: args,
+            typeArguments: step.data.typeArguments || [],
+          })
+          variables[step.id] = moveCallResult
+          break
 
-      case "assignVariable":
-        variables[step.data.variable] = variables[step.data.value] || step.data.value
-        break
+        case "transferObjects":
+          const objects = step.data.objects.map((obj: string) => {
+            if (variables[obj]) return variables[obj]
+            return obj
+          })
+          
+          const recipient = params.recipient || params.address
+          if (!recipient) {
+            throw new Error("No recipient address provided")
+          }
+          
+          tx.transferObjects(objects, recipient)
+          break
+
+        case "assignVariable":
+          variables[step.data.variable] = variables[step.data.value] || step.data.value
+          break
+
+        default:
+          console.warn(`Unknown step type: ${step.type}`)
+      }
+    } catch (error) {
+      console.error(`Error processing step ${step.id}:`, error)
+      throw new Error(`Failed to process step "${step.label}": ${error instanceof Error ? error.message : String(error)}`)
     }
   }
 
