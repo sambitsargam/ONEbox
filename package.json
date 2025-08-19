@@ -12,7 +12,13 @@
   "dependencies": {
     "@onelabs/dapp-kit": "^0.15.2",
     "@onelabs/sui": "^1.26.2",
+    "@onelabs/wallet": "^1.0.1",
     "@tanstack/react-query": "^5.85.5",
+    "@types/lodash": "^4.17.20",
+    "@wallet-standard/core": "^1.1.1",
+    "@wallet-standard/features": "^1.1.0",
+    "lodash": "^4.17.21",
+    "node-rsa": "^1.1.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

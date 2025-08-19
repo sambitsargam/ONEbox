@@ -1,83 +1,106 @@
-import { useState } from 'react';
-import { WalletSection } from './WalletSection';
+import React, { useState } from 'react';
+import { AddressInput } from './AddressInput';
 import { FaucetSection } from './FaucetSection';
 import { BalancesSection } from './BalancesSection';
 import { PTBSection } from './PTBSection';
 import { TransactionHistory } from './TransactionHistory';
 
-type Tab = 'wallet' | 'faucet' | 'balances' | 'ptb' | 'history';
+type Tab = 'address' | 'faucet' | 'balances' | 'ptb' | 'transactions';
 
-export const MainLayout = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('wallet');
+export const MainLayout: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<Tab>('address');
+  const [currentAddress, setCurrentAddress] = useState<string>('');
 
-  const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: 'wallet', label: 'Wallet', icon: '👛' },
-    { id: 'faucet', label: 'Faucet', icon: '🚰' },
-    { id: 'balances', label: 'Balances', icon: '💰' },
-    { id: 'ptb', label: 'PTB Builder', icon: '🔧' },
-    { id: 'history', label: 'History', icon: '📊' },
+  const tabs = [
+    { id: 'address' as Tab, label: 'Address', icon: '🏠' },
+    { id: 'faucet' as Tab, label: 'Faucet', icon: '�' },
+    { id: 'balances' as Tab, label: 'Balances', icon: '💰' },
+    { id: 'ptb' as Tab, label: 'PTB Builder', icon: '🔧' },
+    { id: 'transactions' as Tab, label: 'Transactions', icon: '�' },
   ];
+
+  const handleAddressSubmit = (address: string) => {
+    setCurrentAddress(address);
+    setActiveTab('faucet'); // Auto-navigate to faucet after setting address
+  };
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'wallet':
-        return <WalletSection />;
+      case 'address':
+        return (
+          <AddressInput 
+            onAddressSubmit={handleAddressSubmit}
+            currentAddress={currentAddress}
+          />
+        );
       case 'faucet':
-        return <FaucetSection />;
+        return <FaucetSection currentAddress={currentAddress} />;
       case 'balances':
-        return <BalancesSection />;
+        return <BalancesSection currentAddress={currentAddress} />;
       case 'ptb':
-        return <PTBSection />;
-      case 'history':
-        return <TransactionHistory />;
+        return <PTBSection currentAddress={currentAddress} />;
+      case 'transactions':
+        return <TransactionHistory currentAddress={currentAddress} />;
       default:
-        return <WalletSection />;
+        return (
+          <AddressInput 
+            onAddressSubmit={handleAddressSubmit}
+            currentAddress={currentAddress}
+          />
+        );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-blue-200 sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">O</span>
+      <header className="bg-white shadow-lg border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-white">1</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">ONEbox</h1>
-                <p className="text-sm text-gray-600">OneChain Dev Portal</p>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  ONE<span className="text-blue-600">box</span>
+                </h1>
+                <p className="text-sm text-gray-600">OneChain Developer Portal</p>
               </div>
             </div>
             
-            {/* Network Status */}
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-gray-700">OneChain Testnet</span>
-            </div>
+            {currentAddress && (
+              <div className="hidden md:flex items-center space-x-3 bg-green-50 px-4 py-2 rounded-xl border border-green-200">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-green-800 font-medium">Connected</span>
+                <span className="text-xs text-green-600 font-mono">
+                  {currentAddress.slice(0, 6)}...{currentAddress.slice(-4)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white/60 backdrop-blur-sm border-b border-blue-100">
-        <div className="max-w-6xl mx-auto px-4">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8 overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`
-                  flex items-center space-x-2 py-4 px-2 text-sm font-medium border-b-2 transition-colors
-                  ${activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
-                  }
-                `}
+                className={`flex items-center space-x-2 py-4 px-3 border-b-2 whitespace-nowrap transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? 'border-blue-500 text-blue-600 bg-blue-50'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
               >
                 <span className="text-lg">{tab.icon}</span>
-                <span>{tab.label}</span>
+                <span className="font-medium">{tab.label}</span>
+                {tab.id !== 'address' && !currentAddress && (
+                  <span className="w-2 h-2 bg-orange-400 rounded-full"></span>
+                )}
               </button>
             ))}
           </div>
@@ -85,10 +108,8 @@ export const MainLayout = () => {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-soft border border-white/20 p-6">
-          {renderContent()}
-        </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {renderContent()}
       </main>
     </div>
   );
