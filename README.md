@@ -9,7 +9,7 @@
 
 *The ultimate development toolkit for OneChain blockchain*
 
-[🌐 Live Demo](https://onebox.example.com) 
+[🌐 Live Demo](https://onebox-app.vercel.app/) 
 </div>
 
 ## ✨ Features
