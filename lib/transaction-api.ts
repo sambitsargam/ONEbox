@@ -104,38 +104,116 @@ export async function fetchTransactionHistory(
 ): Promise<TransactionHistoryResponse> {
   const rpcUrl = ONECHAIN_NETWORKS[network].url
 
-  console.log('Fetching transaction history from:', rpcUrl)
+  console.log('Fetching comprehensive transaction history from:', rpcUrl)
   console.log('For address:', address)
 
   try {
-    // Try multiple query methods to find transactions
+    // Try multiple query methods to find all transactions involving this address
     const queries = [
-      // Method 1: Query by FromAddress
+      // Method 1: Query by FromAddress (sent transactions)
       {
         filter: { FromAddress: address },
-        name: "FromAddress"
+        name: "FromAddress",
+        type: "sent"
       },
-      // Method 2: Query by ToAddress  
+      // Method 2: Query by ToAddress (received transactions)
       {
         filter: { ToAddress: address },
-        name: "ToAddress"
+        name: "ToAddress", 
+        type: "received"
       },
-      // Method 3: Query by InputObject (for any interaction)
+      // Method 3: Query by InputObject (transactions affecting owned objects)
       {
         filter: { InputObject: address },
-        name: "InputObject"
+        name: "InputObject",
+        type: "interaction"
       },
-      // Method 4: Query by ChangedObject (for balance changes)
+      // Method 4: Query by ChangedObject (transactions changing owned objects)
       {
         filter: { ChangedObject: address },
-        name: "ChangedObject"
+        name: "ChangedObject",
+        type: "change"
       }
     ]
 
-    for (const query of queries) {
-      console.log(`Trying ${query.name} query...`)
-      
-      const response = await fetch(rpcUrl, {
+    const allTransactions = new Map()
+
+    // Execute all queries in parallel
+    const queryPromises = queries.map(async (query) => {
+      try {
+        console.log(`Executing ${query.name} query...`)
+        
+        const response = await fetch(rpcUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            method: "suix_queryTransactionBlocks",
+            params: [
+              {
+                filter: query.filter,
+                options: {
+                  showInput: true,
+                  showEffects: true,
+                  showEvents: true,
+                  showObjectChanges: true,
+                  showBalanceChanges: true,
+                },
+                limit: 20,
+                order: "descending",
+              },
+            ],
+          }),
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          console.log(`${query.name} found:`, data.result?.data?.length || 0, 'transactions')
+
+          if (data.result?.data) {
+            data.result.data.forEach((tx: any) => {
+              if (!allTransactions.has(tx.digest)) {
+                // Add transaction type and source query info
+                tx.querySource = query.type
+                tx.transactionType = determineTransactionType(tx, address, query.type)
+                allTransactions.set(tx.digest, tx)
+              }
+            })
+          }
+        }
+      } catch (queryError) {
+        console.warn(`${query.name} query failed:`, queryError)
+      }
+    })
+
+    await Promise.all(queryPromises)
+
+    const uniqueTransactions = Array.from(allTransactions.values())
+    
+    // Sort by timestamp (most recent first)
+    uniqueTransactions.sort((a, b) => {
+      const timeA = Number(a.timestampMs || 0)
+      const timeB = Number(b.timestampMs || 0) 
+      return timeB - timeA
+    })
+
+    console.log(`Found ${uniqueTransactions.length} total unique transactions`)
+
+    return {
+      data: uniqueTransactions.slice(0, 30), // Return up to 30 most recent
+      hasNextPage: uniqueTransactions.length > 30,
+    }
+
+  } catch (error) {
+    console.error('Transaction history fetch error:', error)
+    
+    // Fallback: try to get any recent transactions and filter them
+    try {
+      console.log('Attempting fallback query...')
+      const fallbackResponse = await fetch(rpcUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -146,12 +224,10 @@ export async function fetchTransactionHistory(
           method: "suix_queryTransactionBlocks",
           params: [
             {
-              filter: query.filter,
+              filter: {},
               options: {
                 showInput: true,
                 showEffects: true,
-                showEvents: true,
-                showObjectChanges: true,
                 showBalanceChanges: true,
               },
               limit: 50,
@@ -161,69 +237,82 @@ export async function fetchTransactionHistory(
         }),
       })
 
-      console.log(`${query.name} response status:`, response.status)
-
-      if (response.ok) {
-        const data = await response.json()
-        console.log(`${query.name} response:`, data)
-
-        if (data.result && data.result.data && data.result.data.length > 0) {
-          console.log(`Found ${data.result.data.length} transactions with ${query.name}`)
-          return data.result
-        }
-      }
-    }
-
-    // If no results from any query, try a simpler approach
-    console.log('Trying simple transaction query...')
-    const simpleResponse = await fetch(rpcUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: 1,
-        method: "suix_queryTransactionBlocks",
-        params: [
-          {
-            filter: {},
-            options: {
-              showInput: true,
-              showEffects: true,
-            },
-            limit: 10,
-            order: "descending",
-          },
-        ],
-      }),
-    })
-
-    if (simpleResponse.ok) {
-      const simpleData = await simpleResponse.json()
-      console.log('Simple query response:', simpleData)
-      
-      if (simpleData.result) {
-        // Filter transactions that involve our address
-        const filteredTxs = simpleData.result.data?.filter((tx: any) => {
+      if (fallbackResponse.ok) {
+        const fallbackData = await fallbackResponse.json()
+        const filteredTxs = fallbackData.result?.data?.filter((tx: any) => {
           const sender = tx.transaction?.data?.sender
-          const recipient = tx.effects?.mutated?.some((obj: any) => 
+          const hasBalanceChange = tx.balanceChanges?.some((change: any) => 
+            change.owner?.AddressOwner === address
+          )
+          const hasObjectChange = tx.effects?.mutated?.some((obj: any) => 
+            obj.owner?.AddressOwner === address
+          ) || tx.effects?.created?.some((obj: any) => 
             obj.owner?.AddressOwner === address
           )
-          return sender === address || recipient
+          
+          return sender === address || hasBalanceChange || hasObjectChange
+        }).map((tx: any) => {
+          tx.transactionType = determineTransactionType(tx, address, 'fallback')
+          return tx
         }) || []
         
+        console.log(`Fallback found ${filteredTxs.length} relevant transactions`)
+        
         return {
-          data: filteredTxs,
+          data: filteredTxs.slice(0, 20),
           hasNextPage: false
         }
       }
+    } catch (fallbackError) {
+      console.error('Fallback query also failed:', fallbackError)
     }
 
     return { data: [], hasNextPage: false }
+  }
+}
 
-  } catch (error) {
-    console.error('Transaction history fetch error:', error)
-    throw error
+// Helper function to determine transaction type based on user involvement
+function determineTransactionType(tx: any, userAddress: string, queryType: string): string {
+  const sender = tx.transaction?.data?.sender
+  const balanceChanges = tx.balanceChanges || []
+  
+  // Check if user was the sender
+  if (sender === userAddress) {
+    // Check if this resulted in a loss of balance (transfer out)
+    const hasNegativeChange = balanceChanges.some((change: any) => 
+      change.owner?.AddressOwner === userAddress && Number(change.amount) < 0
+    )
+    if (hasNegativeChange) {
+      return 'Transfer Sent'
+    }
+    return 'Transaction Originated'
+  }
+  
+  // Check if user received tokens
+  const hasPositiveChange = balanceChanges.some((change: any) =>
+    change.owner?.AddressOwner === userAddress && Number(change.amount) > 0  
+  )
+  if (hasPositiveChange) {
+    return 'Transfer Received'
+  }
+  
+  // Check for object interactions
+  const hasObjectInteraction = tx.effects?.mutated?.some((obj: any) => 
+    obj.owner?.AddressOwner === userAddress
+  ) || tx.effects?.created?.some((obj: any) => 
+    obj.owner?.AddressOwner === userAddress
+  )
+  
+  if (hasObjectInteraction) {
+    return 'Object Interaction'
+  }
+  
+  // Default based on query type
+  switch (queryType) {
+    case 'sent': return 'Sent Transaction'
+    case 'received': return 'Received Transaction' 
+    case 'interaction': return 'Contract Interaction'
+    case 'change': return 'State Change'
+    default: return 'Related Transaction'
   }
 }

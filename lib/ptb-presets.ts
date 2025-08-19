@@ -77,14 +77,259 @@ export const PTB_PRESETS: PTBPreset[] = [
     ],
   },
   {
-    id: "developer-demo",
-    name: "Developer Demo PTB",
-    description: "Complex PTB for testing multiple operations",
+    id: "multi-transfer",
+    name: "Multi-Recipient Transfer",
+    description: "Split and transfer to multiple recipients",
     steps: [
       {
-        id: "split-for-demo",
+        id: "split-1",
         type: "splitCoin",
-        label: "Split Coin for Demo",
+        label: "Split First Amount",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "split-2", 
+        type: "splitCoin",
+        label: "Split Second Amount",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "transfer-1",
+        type: "transferObjects",
+        label: "Transfer to First Recipient",
+        data: {
+          objects: ["split-1"],
+          recipient: "recipient",
+        },
+      },
+    ],
+  },
+  {
+    id: "coin-operations",
+    name: "Coin Operations Demo",
+    description: "Demonstrate various coin operations",
+    steps: [
+      {
+        id: "create-zero",
+        type: "moveCall",
+        label: "Create Zero Coin",
+        data: {
+          target: "0x2::coin::zero",
+          arguments: [],
+          typeArguments: ["0x2::sui::SUI"],
+        },
+      },
+      {
+        id: "split-main",
+        type: "splitCoin",
+        label: "Split Main Coin",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "transfer-split",
+        type: "transferObjects",
+        label: "Transfer Split Coin",
+        data: {
+          objects: ["split-main"],
+          recipient: "recipient",
+        },
+      },
+    ],
+  },
+  {
+    id: "batch-operations",
+    name: "Batch Operations",
+    description: "Multiple operations in single transaction",
+    steps: [
+      {
+        id: "op-1",
+        type: "moveCall",
+        label: "First Operation",
+        data: {
+          target: "0x2::coin::zero",
+          arguments: [],
+          typeArguments: ["0x2::sui::SUI"],
+        },
+      },
+      {
+        id: "op-2",
+        type: "splitCoin",
+        label: "Split Operation",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "op-3",
+        type: "moveCall",
+        label: "Second Operation",
+        data: {
+          target: "0x2::coin::zero",
+          arguments: [],
+          typeArguments: ["0x2::sui::SUI"],
+        },
+      },
+    ],
+  },
+  {
+    id: "gas-efficient",
+    name: "Gas Efficient Transfer",
+    description: "Optimized transaction for minimal gas usage",
+    steps: [
+      {
+        id: "efficient-split",
+        type: "splitCoin",
+        label: "Efficient Split",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "efficient-transfer",
+        type: "transferObjects",
+        label: "Direct Transfer",
+        data: {
+          objects: ["efficient-split"],
+          recipient: "recipient",
+        },
+      },
+    ],
+  },
+  {
+    id: "large-amount-transfer",
+    name: "Large Amount Transfer",
+    description: "Transfer larger amounts with proper splitting",
+    steps: [
+      {
+        id: "large-split",
+        type: "splitCoin",
+        label: "Split Large Amount",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "large-transfer",
+        type: "transferObjects",
+        label: "Transfer Large Amount",
+        data: {
+          objects: ["large-split"],
+          recipient: "recipient",
+        },
+      },
+    ],
+  },
+  {
+    id: "contract-interaction",
+    name: "Contract Interaction",
+    description: "Interact with smart contracts",
+    steps: [
+      {
+        id: "prepare-coin",
+        type: "splitCoin",
+        label: "Prepare Coin for Contract",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "contract-call",
+        type: "moveCall",
+        label: "Call Contract Function",
+        data: {
+          target: "0x2::coin::zero",
+          arguments: [],
+          typeArguments: ["0x2::sui::SUI"],
+        },
+      },
+    ],
+  },
+  {
+    id: "complex-workflow",
+    name: "Complex Workflow",
+    description: "Multi-step complex transaction workflow",
+    steps: [
+      {
+        id: "workflow-init",
+        type: "moveCall",
+        label: "Initialize Workflow",
+        data: {
+          target: "0x2::coin::zero",
+          arguments: [],
+          typeArguments: ["0x2::sui::SUI"],
+        },
+      },
+      {
+        id: "workflow-split",
+        type: "splitCoin",
+        label: "Split for Workflow",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "workflow-process",
+        type: "moveCall",
+        label: "Process Workflow",
+        data: {
+          target: "0x2::coin::zero",
+          arguments: [],
+          typeArguments: ["0x2::sui::SUI"],
+        },
+      },
+      {
+        id: "workflow-complete",
+        type: "transferObjects",
+        label: "Complete Workflow",
+        data: {
+          objects: ["workflow-split"],
+          recipient: "recipient",
+        },
+      },
+    ],
+  },
+  {
+    id: "developer-demo",
+    name: "Full Developer Demo",
+    description: "Comprehensive PTB showcasing all features",
+    steps: [
+      {
+        id: "demo-init",
+        type: "moveCall",
+        label: "Demo Initialization",
+        data: {
+          target: "0x2::coin::zero",
+          arguments: [],
+          typeArguments: ["0x2::sui::SUI"],
+        },
+      },
+      {
+        id: "demo-split-1",
+        type: "splitCoin",
+        label: "First Demo Split",
+        data: {
+          coin: "gas",
+          amount: "amount",
+        },
+      },
+      {
+        id: "demo-split-2",
+        type: "splitCoin",
+        label: "Second Demo Split",
         data: {
           coin: "gas",
           amount: "amount",
@@ -93,7 +338,7 @@ export const PTB_PRESETS: PTBPreset[] = [
       {
         id: "demo-call",
         type: "moveCall",
-        label: "Demo Move Call",
+        label: "Demo Contract Call",
         data: {
           target: "0x2::coin::zero",
           arguments: [],
@@ -105,7 +350,7 @@ export const PTB_PRESETS: PTBPreset[] = [
         type: "transferObjects",
         label: "Demo Transfer",
         data: {
-          objects: ["split-for-demo"],
+          objects: ["demo-split-1"],
           recipient: "recipient",
         },
       },

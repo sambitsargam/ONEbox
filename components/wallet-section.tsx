@@ -165,7 +165,7 @@ export function WalletSection() {
               </div>
 
               <Badge variant="secondary" className="text-xs">
-                {currentAccount.chains?.[0] || "OneChain"}
+                { "OneChain"}
               </Badge>
             </div>
 

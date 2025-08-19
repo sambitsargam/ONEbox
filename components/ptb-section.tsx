@@ -250,7 +250,7 @@ export function PTBSection() {
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-500">
             <p><strong>Developer Tool:</strong> This is a PTB simulator for testing transaction logic.</p>
-            <p>Available presets: OCT Transfer, Move Call, Developer Demo</p>
+            <p>Available presets: OCT Transfer, Multi-Recipient, Coin Operations, Batch Operations, Gas Efficient, Large Amount, Contract Interaction, Complex Workflow, and Full Demo</p>
           </div>
         </CardContent>
       </Card>
