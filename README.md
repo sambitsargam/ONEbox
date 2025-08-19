@@ -36,7 +36,8 @@ ONEbox is a comprehensive development portal designed specifically for OneChain 
 ### 🎪 Why ONEbox?
 
 - **🚀 Faster Development**: Pre-built components and templates accelerate your development cycle
-- **🧪 Risk-Free Testing**: Simulate transactions before spending real gas fees
+- **� AI-Powered Assistance**: ChatGPT-powered AI assistant for instant OneChain development help
+- **�🧪 Risk-Free Testing**: Simulate transactions before spending real gas fees
 - **📊 Complete Visibility**: Track all your transactions with detailed analytics
 - **🔧 Developer-First**: Built by developers, for developers, with real-world use cases in mind
 - **🌐 Production Ready**: From prototype to production with the same tools
@@ -59,7 +60,14 @@ ONEbox is a comprehensive development portal designed specifically for OneChain 
 - **Account Management**: Switch between accounts effortlessly
 - **Real-time Status**: Live connection status and account information
 
-### 🧪 **PTB Simulator**
+### � **AI Assistant**
+- **ChatGPT Integration**: Powered by OpenAI's ChatGPT for intelligent responses
+- **OneChain Expertise**: Comprehensive knowledge of OneChain development
+- **Code Examples**: Get working code snippets and implementation guides
+- **24/7 Support**: Available anytime for development questions
+- **Context-Aware**: Understands Move programming, PTBs, wallet integration, and more
+
+### �🧪 **PTB Simulator**
 - **10+ Presets**: Pre-built transaction templates for common operations
 - **Dry-Run Testing**: Test transactions without executing them
 - **Gas Estimation**: Accurate gas cost predictions
@@ -149,10 +157,16 @@ ONEbox/
 ├── app/                          # Next.js App Router
 │   ├── globals.css              # Global styles
 │   ├── layout.tsx               # Root layout
-│   └── page.tsx                 # Landing page
+│   ├── page.tsx                 # Landing page
+│   ├── chat/                    # AI Chat feature
+│   │   └── page.tsx            # Chat interface
+│   └── api/                     # API routes
+│       └── chat/               # OpenAI integration
+│           └── route.ts        # Chat API endpoint
 ├── components/                   # React components
 │   ├── ui/                      # UI primitives (Radix + Tailwind)
 │   ├── balance-section.tsx      # Balance management
+│   ├── chat-section.tsx         # Chat component (legacy)
 │   ├── faucet-section.tsx       # Testnet faucet
 │   ├── ptb-section.tsx          # PTB simulator
 │   ├── transaction-section.tsx  # Transaction history
@@ -160,6 +174,7 @@ ONEbox/
 │   └── providers.tsx            # Context providers
 ├── hooks/                        # Custom React hooks
 ├── lib/                         # Utility libraries
+│   ├── chat-ai.ts              # AI chat integration
 │   ├── faucet-api.ts           # Faucet integration
 │   ├── onechain-config.ts      # OneChain configuration
 │   ├── ptb-presets.ts          # PTB templates
@@ -180,6 +195,9 @@ Create a `.env.local` file in the root directory:
 NEXT_PUBLIC_ONECHAIN_NETWORK=testnet
 NEXT_PUBLIC_ONECHAIN_RPC_URL=https://rpc-testnet.onelabs.cc
 NEXT_PUBLIC_ONECHAIN_EXPLORER_URL=https://onescan.cc
+
+# OpenAI Configuration (for AI Chat feature)
+OPENAI_API_KEY=your_openai_api_key_here
 
 # Faucet Configuration (optional)
 NEXT_PUBLIC_FAUCET_URL=https://faucet-testnet.onelabs.cc

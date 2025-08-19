@@ -122,8 +122,8 @@ export default function ChatPage({}: ChatPageProps) {
         if (inCodeBlock) {
           // End code block
           elements.push(
-            <pre key={elements.length} className="bg-gray-900 text-gray-100 p-3 rounded-md overflow-x-auto my-2">
-              <code className={`language-${codeLanguage}`}>
+            <pre key={elements.length} className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto my-3 border border-slate-200 dark:border-slate-700">
+              <code className={`language-${codeLanguage} text-sm`}>
                 {currentElement.join('\n')}
               </code>
             </pre>
@@ -163,7 +163,7 @@ export default function ChatPage({}: ChatPageProps) {
           currentElement = []
         }
         elements.push(
-          <h2 key={elements.length} className="font-bold text-xl mt-4 mb-2 text-blue-600 dark:text-blue-400">
+          <h2 key={elements.length} className="font-bold text-xl mt-6 mb-3 text-blue-600 dark:text-blue-400 border-b border-slate-200 dark:border-slate-600 pb-2">
             {line.replace('# ', '')}
           </h2>
         )
@@ -179,7 +179,7 @@ export default function ChatPage({}: ChatPageProps) {
           currentElement = []
         }
         elements.push(
-          <h3 key={elements.length} className="font-semibold text-lg mt-3 mb-1 text-blue-600 dark:text-blue-400">
+          <h3 key={elements.length} className="font-semibold text-lg mt-4 mb-2 text-blue-600 dark:text-blue-400">
             {line.replace('## ', '')}
           </h3>
         )
@@ -291,15 +291,15 @@ export default function ChatPage({}: ChatPageProps) {
 
       {/* Chat Interface */}
       <main className="container mx-auto px-4 py-6 max-w-4xl">
-        <Card className="h-[calc(100vh-12rem)] flex flex-col shadow-lg border-slate-200/60 bg-white/60 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/60">
-          <CardHeader className="flex-shrink-0 pb-4">
+        <Card className="h-[calc(100vh-12rem)] flex flex-col shadow-lg border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
+          <CardHeader className="flex-shrink-0 pb-4 border-b border-slate-200 dark:border-slate-700">
             <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
               <Bot className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               Chat with OneChain AI
             </CardTitle>
           </CardHeader>
           
-          <CardContent className="flex-1 flex flex-col p-0">
+          <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
             {/* Messages */}
             <ScrollArea className="flex-1 px-6">
               <div className="space-y-6 py-4">
@@ -309,23 +309,23 @@ export default function ChatPage({}: ChatPageProps) {
                       <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
                         message.role === 'user' 
                           ? 'bg-blue-600 text-white' 
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
+                          : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                       }`}>
                         {message.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                       </div>
                       
                       <div className={`flex-1 max-w-[80%] ${message.role === 'user' ? 'text-right' : ''}`}>
-                        <div className={`rounded-lg px-4 py-3 ${
+                        <div className={`rounded-xl px-4 py-3 shadow-sm ${
                           message.role === 'user'
-                            ? 'bg-blue-600 text-white ml-auto'
-                            : 'bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
+                            ? 'bg-blue-600 text-white ml-auto max-w-fit'
+                            : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700'
                         }`}>
-                          <div className="text-sm">
+                          <div className="text-sm leading-relaxed">
                             {message.role === 'assistant' ? formatContent(message.content) : message.content}
                           </div>
                         </div>
                         
-                        <div className={`text-xs text-gray-500 mt-1 ${message.role === 'user' ? 'text-right' : ''}`}>
+                        <div className={`text-xs text-slate-500 dark:text-slate-400 mt-2 ${message.role === 'user' ? 'text-right' : ''}`}>
                           {formatTime(message.timestamp)}
                         </div>
                       </div>
@@ -334,7 +334,7 @@ export default function ChatPage({}: ChatPageProps) {
                     {/* Suggestions */}
                     {message.suggestions && message.role === 'assistant' && (
                       <div className="ml-11 space-y-2">
-                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                           <Lightbulb className="h-3 w-3" />
                           Try asking:
                         </div>
@@ -359,17 +359,17 @@ export default function ChatPage({}: ChatPageProps) {
                 {/* Loading indicator */}
                 {isLoading && (
                   <div className="flex gap-3">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
                       <Bot className="h-4 w-4" />
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
-                      <div className="flex items-center gap-1 text-gray-500">
+                    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 shadow-sm">
+                      <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                         <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                          <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                          <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                         </div>
-                        <span className="text-sm ml-2">AI is thinking...</span>
+                        <span className="text-sm">AI is thinking...</span>
                       </div>
                     </div>
                   </div>
@@ -380,21 +380,22 @@ export default function ChatPage({}: ChatPageProps) {
             </ScrollArea>
 
             {/* Input */}
-            <div className="border-t border-slate-200 dark:border-slate-700 p-4">
-              <div className="flex gap-2">
+            <div className="border-t border-slate-200 dark:border-slate-700 p-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
+              <div className="flex gap-3">
                 <Textarea
                   ref={textareaRef}
                   placeholder="Ask me anything about OneChain development..."
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="flex-1 min-h-[44px] max-h-32 resize-none"
+                  className="flex-1 min-h-[48px] max-h-32 resize-none border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500"
                   disabled={isLoading}
                 />
                 <Button 
                   onClick={handleSend} 
                   disabled={!input.trim() || isLoading}
-                  className="self-end"
+                  className="self-end bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                  size="lg"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
