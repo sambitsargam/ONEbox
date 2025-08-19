@@ -10,6 +10,7 @@ import { Droplets, Loader2, CheckCircle, AlertCircle } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 import { requestFaucetTokens } from "@/lib/faucet-api"
+import { testFaucetAPI } from "@/lib/faucet-test"
 import type { NetworkType } from "@/lib/onechain-config"
 
 export function FaucetSection() {
@@ -28,7 +29,11 @@ export function FaucetSection() {
       return await requestFaucetTokens(recipient, network as NetworkType)
     },
     onSuccess: (data) => {
+      console.log('Faucet success response:', data)
+      
+      // Check if we have transferred gas objects
       const transferredObject = data.transferredGasObjects?.[0]
+      
       if (transferredObject) {
         setLastRequestResult({
           success: true,
@@ -36,15 +41,29 @@ export function FaucetSection() {
           amount: transferredObject.amount,
         })
         toast.success(`Successfully received ${transferredObject.amount} OCT tokens!`)
-        // Clear the input if it was using the connected wallet address
-        if (recipientAddress === currentAccount?.address || !recipientAddress) {
-          setRecipientAddress("")
-        }
+      } else if (data.status === "success" || data.message) {
+        // Handle cases where faucet returns success but no gas objects
+        setLastRequestResult({
+          success: true,
+          error: data.message || "Faucet request completed successfully, but no gas objects were transferred. This might indicate rate limiting or account already funded.",
+        })
+        toast.success(data.message || "Faucet request completed successfully!")
       } else {
-        throw new Error("No gas objects transferred")
+        // No gas objects and no success status
+        setLastRequestResult({
+          success: false,
+          error: "No gas objects transferred. You may have already received tokens recently or hit the rate limit.",
+        })
+        toast.error("No gas objects transferred. Please try again later or check if you've already received tokens recently.")
+      }
+      
+      // Clear the input if it was using the connected wallet address
+      if (recipientAddress === currentAccount?.address || !recipientAddress) {
+        setRecipientAddress("")
       }
     },
     onError: (error) => {
+      console.error('Faucet error:', error)
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
       setLastRequestResult({
         success: false,
@@ -127,6 +146,26 @@ export function FaucetSection() {
             </>
           )}
         </Button>
+
+        {/* Debug button for development */}
+        {process.env.NODE_ENV === 'development' && (
+          <Button
+            onClick={async () => {
+              const recipient = getEffectiveRecipient()
+              if (recipient) {
+                console.log('Testing faucet API...')
+                const result = await testFaucetAPI(recipient)
+                console.log('Test result:', result)
+                toast.info('Check console for detailed faucet API response')
+              }
+            }}
+            variant="outline"
+            size="sm"
+            className="w-full text-xs"
+          >
+            🔍 Debug Faucet API (Dev Only)
+          </Button>
+        )}
 
         {lastRequestResult && (
           <div
