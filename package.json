@@ -1,12 +1,41 @@
 {
-  "name": "my-project",
-  "version": "0.1.0",
+  "name": "onebox",
+  "version": "1.0.0",
+  "description": "OneChain Development Portal - Complete toolkit for OneChain blockchain development",
   "private": true,
+  "keywords": [
+    "onechain",
+    "blockchain",
+    "development",
+    "wallet",
+    "dapp",
+    "typescript",
+    "nextjs",
+    "ptb",
+    "sui"
+  ],
+  "author": {
+    "name": "Sambit Sargam",
+    "email": "sambitsargam@gmail.com",
+    "url": "https://github.com/sambitsargam"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sambitsargam/ONEbox.git"
+  },
+  "homepage": "https://github.com/sambitsargam/ONEbox#readme",
+  "bugs": {
+    "url": "https://github.com/sambitsargam/ONEbox/issues"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
