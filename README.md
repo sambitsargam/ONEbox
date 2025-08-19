@@ -12,7 +12,46 @@
 [🌐 Live Demo](https://onebox-app.vercel.app/) 
 </div>
 
+## 📋 Table of Contents
+
+- [✨ Features](#-features)
+- [🚀 Quick Start](#-quick-start)
+- [🛠 Tech Stack](#-tech-stack)
+- [📁 Project Structure](#-project-structure)
+- [🔧 Configuration](#-configuration)
+- [🧪 PTB Presets](#-ptb-presets)
+- [🚀 Deployment](#-deployment)
+- [🤝 Contributing](#-contributing)
+- [🧪 Testing](#-testing)
+- [📊 Performance](#-performance)
+- [🔒 Security](#-security)
+- [📚 Resources](#-resources)
+- [📝 License](#-license)
+- [🙏 Acknowledgments](#-acknowledgments)
+
+## 🎯 What is ONEbox?
+
+ONEbox is a comprehensive development portal designed specifically for OneChain blockchain developers. It provides an all-in-one toolkit that simplifies the development, testing, and deployment process for OneChain applications.
+
+### 🎪 Why ONEbox?
+
+- **🚀 Faster Development**: Pre-built components and templates accelerate your development cycle
+- **🧪 Risk-Free Testing**: Simulate transactions before spending real gas fees
+- **📊 Complete Visibility**: Track all your transactions with detailed analytics
+- **🔧 Developer-First**: Built by developers, for developers, with real-world use cases in mind
+- **🌐 Production Ready**: From prototype to production with the same tools
+
+### 🎭 Who is it for?
+
+- **New Developers** getting started with OneChain
+- **Experienced Developers** building complex dApps
+- **Teams** collaborating on OneChain projects
+- **Educators** teaching blockchain development
+- **Researchers** exploring OneChain capabilities
+
 ## ✨ Features
+
+> ONEbox provides everything you need to develop, test, and deploy on OneChain blockchain
 
 ### 🔗 **Wallet Integration**
 - **Seamless Connection**: Connect OneChain wallets with one click
@@ -79,27 +118,29 @@
 
 ## 🛠 Tech Stack
 
+> Built with modern technologies for optimal performance and developer experience
+
 ### **Frontend Framework**
-- **Next.js 14.2.16** - React framework with App Router
-- **TypeScript 5** - Type-safe development
-- **React 18** - Modern React with concurrent features
+- **Next.js 14.2.16** - React framework with App Router for server-side rendering and optimal performance
+- **TypeScript 5** - Type-safe development with enhanced developer experience
+- **React 18** - Modern React with concurrent features and improved performance
 
 ### **Styling & UI**
-- **Tailwind CSS 4** - Utility-first CSS framework
-- **Radix UI** - Accessible component primitives
-- **Lucide React** - Beautiful icon library
-- **next-themes** - Dark/light mode support
+- **Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+- **Radix UI** - Accessible, unstyled component primitives for building design systems
+- **Lucide React** - Beautiful, customizable icon library
+- **next-themes** - Dark/light mode support with system preference detection
 
 ### **OneChain Integration**
-- **@onelabs/dapp-kit** - OneChain wallet and transaction utilities
-- **@mysten/sui** - Core Sui/OneChain SDK
-- **@tanstack/react-query** - Data fetching and caching
+- **@onelabs/dapp-kit** - Official OneChain wallet and transaction utilities
+- **@mysten/sui** - Core Sui/OneChain SDK for blockchain interactions
+- **@tanstack/react-query** - Powerful data fetching and caching solution
 
 ### **Development Tools**
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
-- **PostCSS** - CSS processing
-- **TypeScript** - Static type checking
+- **ESLint** - Code linting for consistent code quality
+- **Prettier** - Automatic code formatting
+- **PostCSS** - CSS processing and optimization
+- **TypeScript** - Static type checking and IntelliSense
 
 ## 📁 Project Structure
 
@@ -182,41 +223,7 @@ Each preset includes:
 - ✅ Error handling
 - ✅ Documentation
 
-## 🔍 API Reference
-
-### Wallet Integration
-
-```typescript
-import { useCurrentAccount, useSignTransactionBlock } from "@onelabs/dapp-kit"
-
-function MyComponent() {
-  const currentAccount = useCurrentAccount()
-  const { mutate: signTransactionBlock } = useSignTransactionBlock()
-  
-  // Your component logic
-}
-```
-
-### Transaction Building
-
-```typescript
-import { Transaction } from "@mysten/sui/transactions"
-
-const txb = new Transaction()
-txb.setSender(senderAddress)
-// Add transaction commands
-const result = await signTransactionBlock({ transaction: txb })
-```
-
-### Faucet Integration
-
-```typescript
-import { requestFaucetTokens } from "@/lib/faucet-api"
-
-const result = await requestFaucetTokens(address, amount)
-```
-
-## 🚀 Deployment
+##  Deployment
 
 ### Vercel (Recommended)
 
@@ -250,28 +257,35 @@ pnpm export
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions from developers of all skill levels! ONEbox is built by the community, for the community.
 
-### Development Workflow
+### 🚀 Quick Contributing Guide
 
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Make your changes**
-4. **Run tests**
-   ```bash
-   pnpm test
-   ```
-5. **Submit a pull request**
+1. **🍴 Fork the repository** on GitHub
+2. **🌟 Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **💻 Make your changes** and test thoroughly
+4. **📝 Commit your changes** (`git commit -m 'Add amazing feature'`)
+5. **🚀 Push to the branch** (`git push origin feature/amazing-feature`)
+6. **🎯 Open a Pull Request** with a clear description
 
-### Code Style
+### 📚 Detailed Guidelines
 
-- **ESLint** - Follow the configured rules
-- **Prettier** - Auto-format code
-- **TypeScript** - Use strict typing
-- **Conventional Commits** - Follow commit message standards
+For comprehensive contributing guidelines, development setup, coding standards, and more, please see our **[CONTRIBUTING.md](CONTRIBUTING.md)** file.
+
+### 🎯 Areas We Need Help With
+
+- 🐛 **Bug fixes** - Help us squash bugs and improve stability
+- ✨ **New PTB presets** - Add more transaction templates
+- 📚 **Documentation** - Improve guides and examples  
+- 🎨 **UI/UX improvements** - Enhance user experience
+- 🌐 **Internationalization** - Add support for more languages
+- ⚡ **Performance optimizations** - Make ONEbox even faster
+
+### 💬 Get Involved
+
+- 📞 **[GitHub Discussions](https://github.com/sambitsargam/ONEbox/discussions)** - Ask questions and share ideas
+- 🐛 **[Issues](https://github.com/sambitsargam/ONEbox/issues)** - Report bugs and request features
+- 📧 **[Email](mailto:sambitsargam@gmail.com)** - Direct contact for maintainers
 
 ## 🧪 Testing
 
@@ -324,6 +338,26 @@ tests/
 - 🚫 **XSS Protection** - Content Security Policy
 - 🌐 **HTTPS Only** - Secure connections required
 - 🔍 **Dependency Scanning** - Regular security audits
+
+## ❓ Frequently Asked Questions
+
+### **Q: Do I need real OCT tokens to use ONEbox?**
+A: No! ONEbox works with OneChain testnet and provides a built-in faucet for free test tokens. You can develop and test without spending real money.
+
+### **Q: Can I use ONEbox with my existing OneChain project?**
+A: Absolutely! ONEbox is designed to integrate with existing projects. You can use individual components or the entire toolkit.
+
+### **Q: What wallets are supported?**
+A: ONEbox supports all OneChain-compatible wallets through the @onelabs/dapp-kit integration.
+
+### **Q: Is ONEbox ready for production use?**
+A: Yes! While primarily designed for development, ONEbox can be used to interact with OneChain mainnet when configured properly.
+
+### **Q: How do I add custom PTB presets?**
+A: You can add custom presets by modifying the `lib/ptb-presets.ts` file. See our [Contributing Guide](CONTRIBUTING.md) for detailed instructions.
+
+### **Q: Can I contribute new features?**
+A: We'd love your contributions! Please read our [Contributing Guide](CONTRIBUTING.md) and feel free to open issues for feature requests.
 
 ## 📚 Resources
 
