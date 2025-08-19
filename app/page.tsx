@@ -58,11 +58,24 @@ export default function HomePage() {
                 explore the ecosystem, and build the future of decentralized applications.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                <Button 
+                  size="lg" 
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={() => {
+                    const walletSection = document.querySelector('#wallet-section');
+                    if (walletSection) {
+                      walletSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                >
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="lg">
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => window.open('https://doc-testnet.onelabs.cc', '_blank')}
+                >
                   View Documentation
                 </Button>
               </div>
@@ -124,7 +137,9 @@ export default function HomePage() {
         <div className="grid gap-6 lg:gap-8 xl:grid-cols-2">
           {/* Left Column */}
           <div className="space-y-6 lg:space-y-8">
-            <WalletSection />
+            <div id="wallet-section">
+              <WalletSection />
+            </div>
             <FaucetSection />
             <BalanceSection />
           </div>

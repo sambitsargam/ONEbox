@@ -30,7 +30,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
         <WalletProvider 
-          autoConnect={true}
+          autoConnect={false}
           enableUnsafeBurner={process.env.NODE_ENV === 'development'}
           preferredWallets={["OneChain Wallet", "OneLabs Wallet"]}
         >

@@ -58,9 +58,14 @@ export default function ChatPage({}: ChatPageProps) {
     }
   }, [messages])
 
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => {
+    setHydrated(true)
+  }, [])
+
   const formatTime = (timestamp: string) => {
-    // Client-side only formatting to avoid hydration issues
-    if (typeof window === 'undefined') return ''
+    if (!hydrated) return ''
     
     const date = new Date(timestamp)
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -119,6 +124,10 @@ export default function ChatPage({}: ChatPageProps) {
     textareaRef.current?.focus()
   }
 
+  const renderFormattedText = (text: string) => {
+    return <span dangerouslySetInnerHTML={{ __html: text }} />
+  }
+
   const formatContent = (content: string) => {
     const lines = content.split('\n')
     const elements = []
@@ -146,9 +155,9 @@ export default function ChatPage({}: ChatPageProps) {
           // Start code block
           if (currentElement.length > 0) {
             elements.push(
-              <div key={elements.length}>
+              <div key={elements.length} className="mb-3">
                 {currentElement.map((text, idx) => (
-                  <p key={idx} className="mb-2">{text}</p>
+                  <p key={idx} className="mb-2">{renderFormattedText(text)}</p>
                 ))}
               </div>
             )
@@ -165,7 +174,7 @@ export default function ChatPage({}: ChatPageProps) {
       } else if (line.startsWith('# ')) {
         if (currentElement.length > 0) {
           elements.push(
-            <div key={elements.length}>
+            <div key={elements.length} className="mb-3">
               {currentElement.map((text, idx) => (
                 <p key={idx} className="mb-2">{text}</p>
               ))}
@@ -174,14 +183,14 @@ export default function ChatPage({}: ChatPageProps) {
           currentElement = []
         }
         elements.push(
-          <h2 key={elements.length} className="font-bold text-xl mt-6 mb-3 text-blue-600 dark:text-blue-400 border-b border-slate-200 dark:border-slate-600 pb-2">
+          <h1 key={elements.length} className="font-bold text-xl mt-6 mb-3 text-blue-600 dark:text-blue-400 border-b border-slate-200 dark:border-slate-600 pb-2">
             {line.replace('# ', '')}
-          </h2>
+          </h1>
         )
       } else if (line.startsWith('## ')) {
         if (currentElement.length > 0) {
           elements.push(
-            <div key={elements.length}>
+            <div key={elements.length} className="mb-3">
               {currentElement.map((text, idx) => (
                 <p key={idx} className="mb-2">{text}</p>
               ))}
@@ -190,8 +199,24 @@ export default function ChatPage({}: ChatPageProps) {
           currentElement = []
         }
         elements.push(
-          <h3 key={elements.length} className="font-semibold text-lg mt-4 mb-2 text-blue-600 dark:text-blue-400">
+          <h2 key={elements.length} className="font-semibold text-lg mt-4 mb-2 text-blue-600 dark:text-blue-400">
             {line.replace('## ', '')}
+          </h2>
+        )
+      } else if (line.startsWith('### ')) {
+        if (currentElement.length > 0) {
+          elements.push(
+            <div key={elements.length} className="mb-3">
+              {currentElement.map((text, idx) => (
+                <p key={idx} className="mb-2">{text}</p>
+              ))}
+            </div>
+          )
+          currentElement = []
+        }
+        elements.push(
+          <h3 key={elements.length} className="font-medium text-base mt-3 mb-2 text-blue-600 dark:text-blue-400">
+            {line.replace('### ', '')}
           </h3>
         )
       } else if (line.startsWith('• ')) {
@@ -214,16 +239,16 @@ export default function ChatPage({}: ChatPageProps) {
                 {currentElement.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <span className="text-blue-500 mt-1">•</span>
-                    <span>{item.replace('• ', '')}</span>
+                    {renderFormattedText(item.replace('• ', ''))}
                   </li>
                 ))}
               </ul>
             )
           } else {
             elements.push(
-              <div key={elements.length}>
+              <div key={elements.length} className="mb-3">
                 {currentElement.map((text, idx) => (
-                  <p key={idx} className="mb-2">{text}</p>
+                  <p key={idx} className="mb-2">{renderFormattedText(text)}</p>
                 ))}
               </div>
             )
@@ -231,7 +256,19 @@ export default function ChatPage({}: ChatPageProps) {
           currentElement = []
         }
       } else {
-        currentElement.push(line)
+        // Handle inline formatting like **bold** and *italic*
+        let formattedLine = line
+        
+        // Handle bold text **text**
+        formattedLine = formattedLine.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        
+        // Handle italic text *text*
+        formattedLine = formattedLine.replace(/\*(.*?)\*/g, '<em>$1</em>')
+        
+        // Handle inline code `code`
+        formattedLine = formattedLine.replace(/`(.*?)`/g, '<code class="bg-slate-100 dark:bg-slate-700 px-1 py-0.5 rounded text-sm">$1</code>')
+        
+        currentElement.push(formattedLine)
       }
     }
 
@@ -250,16 +287,16 @@ export default function ChatPage({}: ChatPageProps) {
             {currentElement.map((item, idx) => (
               <li key={idx} className="flex items-start gap-2">
                 <span className="text-blue-500 mt-1">•</span>
-                <span>{item.replace('• ', '')}</span>
+                {renderFormattedText(item.replace('• ', ''))}
               </li>
             ))}
           </ul>
         )
       } else {
         elements.push(
-          <div key={elements.length}>
+          <div key={elements.length} className="mb-3">
             {currentElement.map((text, idx) => (
-              <p key={idx} className="mb-2">{text}</p>
+              <p key={idx} className="mb-2">{renderFormattedText(text)}</p>
             ))}
           </div>
         )
