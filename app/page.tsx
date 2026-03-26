@@ -11,7 +11,7 @@ const AGENT_SKILL_URL = process.env.NEXT_PUBLIC_AGENT_SKILL_URL || "https://oneb
 
 export default function HomePage() {
   const curlCommand = `curl -s ${AGENT_SKILL_URL}`
-  const chatPrompt = "Solve your doubt using chat."
+  const chatPrompt = "Hello."
 
   const copyText = async (text: string, label: string) => {
     try {
