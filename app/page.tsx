@@ -47,40 +47,69 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-[86rem] flex-col gap-20 px-5 py-16 sm:px-8 lg:py-24">
+      <main className="mx-auto flex w-full max-w-[82rem] flex-col gap-16 px-5 py-12 sm:px-8 lg:py-16">
         <section className="space-y-8">
-          <div className="mx-auto w-full max-w-[82rem] space-y-10 animate-enter-up">
-            <div className="grid gap-8 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
-              <div className="space-y-6">
+          <div className="mx-auto w-full max-w-7xl space-y-8 animate-enter-up">
+            <div className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
+              <div className="space-y-5">
                 <Badge className="rounded-full border border-slate-300/60 bg-white/85 px-5 py-2 text-sm text-slate-700 shadow-sm">
                   <Sparkles className="mr-2 h-3.5 w-3.5 text-amber-500" />
                   Ship OneChain apps with AI-assisted execution
                 </Badge>
 
-                <div className="space-y-6">
-                  <h2 className="text-6xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-7xl lg:text-8xl">
+                <div className="space-y-4">
+                  <h2 className="text-5xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-6xl lg:text-7xl xl:text-[4.8rem]">
                     Build polished
                     <span className="block bg-gradient-to-r from-[#0f766e] via-[#0284c7] to-[#f97316] bg-clip-text text-transparent">
                       OneChain applications
                     </span>
                     from prompt to deploy.
                   </h2>
-                  <p className="max-w-4xl text-xl leading-relaxed text-slate-600 sm:text-2xl">
+                  <p className="max-w-3xl text-lg leading-relaxed text-slate-600 sm:text-xl lg:text-2xl">
                     ONEbox gives your agent a production-grade skill profile so it can scaffold contracts, wire
                     frontend, deploy to testnet, and validate flow without getting stuck in planning loops.
                   </p>
                 </div>
               </div>
 
-              <div className="relative hidden h-[260px] overflow-hidden rounded-3xl border border-white/70 bg-white/80 shadow-[0_20px_45px_rgba(2,8,23,0.08)] lg:flex lg:items-center lg:justify-center">
-                <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-teal-200/50 blur-2xl animate-float-slow" />
-                <div className="absolute -left-12 bottom-4 h-28 w-28 rounded-full bg-sky-200/55 blur-2xl animate-float-medium" />
-                <div className="relative flex h-40 w-40 items-center justify-center rounded-full border border-teal-300/70 bg-white/85">
-                  <div className="absolute h-28 w-28 rounded-full border border-teal-200 animate-pulse" />
-                  <div className="absolute h-16 w-16 rounded-full border border-sky-300 animate-pulse" />
+              <div className="relative hidden h-[240px] w-[240px] overflow-hidden rounded-2xl border border-white/70 bg-white/85 shadow-[0_20px_45px_rgba(2,8,23,0.08)] lg:ml-auto lg:translate-x-4 lg:flex lg:items-center lg:justify-center animate-float-medium">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(20,184,166,0.15),transparent_55%),radial-gradient(circle_at_70%_70%,rgba(14,165,233,0.16),transparent_52%)]" />
+                <div className="absolute h-[170px] w-[170px] rounded-full border border-teal-200/80 animate-spin [animation-duration:14s]" />
+                <div className="absolute h-[120px] w-[120px] rounded-full border border-sky-300/80 animate-spin [animation-duration:10s] [animation-direction:reverse]" />
+                <div className="absolute left-8 top-7 h-2.5 w-2.5 rounded-full bg-teal-400 animate-pulse" />
+                <div className="absolute bottom-8 right-7 h-2.5 w-2.5 rounded-full bg-sky-400 animate-pulse" />
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-xl border border-teal-300/70 bg-white/90 shadow-sm">
                   <Bot className="h-8 w-8 text-teal-700" />
                 </div>
               </div>
+            </div>
+
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <Link href={`/chat?prompt=${encodeURIComponent(chatPrompt)}`}>
+                <Button size="lg" className="h-14 rounded-full bg-[#0f766e] px-7 text-lg text-white hover:bg-[#115e59] sm:text-xl">
+                  <Bot className="mr-2 h-5 w-5" />
+                  Solve your doubt using chat
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/dashboard">
+                <Button
+                  size="lg"
+                  className="h-14 rounded-full bg-slate-900 px-7 text-lg text-white hover:bg-slate-800 sm:text-xl"
+                >
+                  Go to Dashboard
+                </Button>
+              </Link>
+              <Link href="/docs">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-14 rounded-full border-slate-300 bg-white/80 px-7 text-lg text-slate-700 hover:bg-white sm:text-xl"
+                >
+                  View Documentation
+                </Button>
+              </Link>
             </div>
 
             <Card className="relative w-full overflow-hidden rounded-3xl border-white/70 bg-white/90 p-5 shadow-[0_20px_50px_rgba(2,8,23,0.12)] animate-enter-up-delay sm:p-6">
@@ -108,24 +137,6 @@ export default function HomePage() {
               </div>
             </Card>
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <Link href={`/chat?prompt=${encodeURIComponent(chatPrompt)}`}>
-                <Button size="lg" className="h-14 rounded-full bg-[#0f766e] px-7 text-base text-white hover:bg-[#115e59] sm:text-lg">
-                  <Bot className="mr-2 h-5 w-5" />
-                  Solve your doubt using chat
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/docs">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="h-14 rounded-full border-slate-300 bg-white/80 px-7 text-base text-slate-700 hover:bg-white sm:text-lg"
-                >
-                  View Documentation
-                </Button>
-              </Link>
-            </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
               <Card className="rounded-2xl border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(2,8,23,0.06)]">
