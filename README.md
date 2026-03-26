@@ -191,16 +191,9 @@ ONEbox/
 Create a `.env.local` file in the root directory:
 
 ```env
-# OneChain Network Configuration
-NEXT_PUBLIC_ONECHAIN_NETWORK=testnet
-NEXT_PUBLIC_ONECHAIN_RPC_URL=https://rpc-testnet.onelabs.cc
-NEXT_PUBLIC_ONECHAIN_EXPLORER_URL=https://onescan.cc
-
 # OpenAI Configuration (for AI Chat feature)
 OPENAI_API_KEY=your_openai_api_key_here
 
-# Faucet Configuration (optional)
-NEXT_PUBLIC_FAUCET_URL=https://faucet-testnet.onelabs.cc
 ```
 
 ### OneChain Network Setup
