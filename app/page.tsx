@@ -47,26 +47,40 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-16 px-5 py-14 sm:px-8 lg:py-20">
+      <main className="mx-auto flex w-full max-w-[86rem] flex-col gap-20 px-5 py-16 sm:px-8 lg:py-24">
         <section className="space-y-8">
-          <div className="mx-auto w-full max-w-6xl space-y-10 animate-enter-up">
-            <Badge className="rounded-full border border-slate-300/60 bg-white/85 px-5 py-2 text-sm text-slate-700 shadow-sm">
-              <Sparkles className="mr-2 h-3.5 w-3.5 text-amber-500" />
-              Ship OneChain apps with AI-assisted execution
-            </Badge>
+          <div className="mx-auto w-full max-w-[82rem] space-y-10 animate-enter-up">
+            <div className="grid gap-8 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
+              <div className="space-y-6">
+                <Badge className="rounded-full border border-slate-300/60 bg-white/85 px-5 py-2 text-sm text-slate-700 shadow-sm">
+                  <Sparkles className="mr-2 h-3.5 w-3.5 text-amber-500" />
+                  Ship OneChain apps with AI-assisted execution
+                </Badge>
 
-            <div className="space-y-6">
-              <h2 className="text-5xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
-                Build polished
-                <span className="block bg-gradient-to-r from-[#0f766e] via-[#0284c7] to-[#f97316] bg-clip-text text-transparent">
-                  OneChain applications
-                </span>
-                from prompt to deploy.
-              </h2>
-              <p className="max-w-4xl text-lg leading-relaxed text-slate-600 sm:text-xl">
-                ONEbox gives your agent a production-grade skill profile so it can scaffold contracts, wire frontend,
-                deploy to testnet, and validate flow without getting stuck in planning loops.
-              </p>
+                <div className="space-y-6">
+                  <h2 className="text-6xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-7xl lg:text-8xl">
+                    Build polished
+                    <span className="block bg-gradient-to-r from-[#0f766e] via-[#0284c7] to-[#f97316] bg-clip-text text-transparent">
+                      OneChain applications
+                    </span>
+                    from prompt to deploy.
+                  </h2>
+                  <p className="max-w-4xl text-xl leading-relaxed text-slate-600 sm:text-2xl">
+                    ONEbox gives your agent a production-grade skill profile so it can scaffold contracts, wire
+                    frontend, deploy to testnet, and validate flow without getting stuck in planning loops.
+                  </p>
+                </div>
+              </div>
+
+              <div className="relative hidden h-[260px] overflow-hidden rounded-3xl border border-white/70 bg-white/80 shadow-[0_20px_45px_rgba(2,8,23,0.08)] lg:flex lg:items-center lg:justify-center">
+                <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-teal-200/50 blur-2xl animate-float-slow" />
+                <div className="absolute -left-12 bottom-4 h-28 w-28 rounded-full bg-sky-200/55 blur-2xl animate-float-medium" />
+                <div className="relative flex h-40 w-40 items-center justify-center rounded-full border border-teal-300/70 bg-white/85">
+                  <div className="absolute h-28 w-28 rounded-full border border-teal-200 animate-pulse" />
+                  <div className="absolute h-16 w-16 rounded-full border border-sky-300 animate-pulse" />
+                  <Bot className="h-8 w-8 text-teal-700" />
+                </div>
+              </div>
             </div>
 
             <Card className="relative w-full overflow-hidden rounded-3xl border-white/70 bg-white/90 p-5 shadow-[0_20px_50px_rgba(2,8,23,0.12)] animate-enter-up-delay sm:p-6">
