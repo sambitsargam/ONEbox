@@ -54,20 +54,20 @@ export default function HomePage() {
               <div className="space-y-5">
                 <Badge className="rounded-full border border-slate-300/60 bg-white/85 px-5 py-2 text-sm text-slate-700 shadow-sm">
                   <Sparkles className="mr-2 h-3.5 w-3.5 text-amber-500" />
-                  Ship OneChain apps with AI-assisted execution
+                  Complete OneChain developer workspace
                 </Badge>
 
                 <div className="space-y-4">
                   <h2 className="text-5xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-6xl lg:text-7xl xl:text-[4.8rem]">
-                    Build polished
+                    Build, test, and ship
                     <span className="block bg-gradient-to-r from-[#0f766e] via-[#0284c7] to-[#f97316] bg-clip-text text-transparent">
                       OneChain applications
                     </span>
-                    from prompt to deploy.
+                    from one dashboard.
                   </h2>
                   <p className="max-w-3xl text-lg leading-relaxed text-slate-600 sm:text-xl lg:text-2xl">
-                    ONEbox gives your agent a production-grade skill profile so it can scaffold contracts, wire
-                    frontend, deploy to testnet, and validate flow without getting stuck in planning loops.
+                    ONEbox brings wallet connection, network switching, OCT faucet, live balances, PTB simulation,
+                    transaction history, AI guidance, and docs into one place so you can move from setup to execution faster.
                   </p>
                 </div>
               </div>
@@ -89,7 +89,7 @@ export default function HomePage() {
               <Link href={`/chat?prompt=${encodeURIComponent(chatPrompt)}`}>
                 <Button size="lg" className="h-14 rounded-full bg-[#0f766e] px-7 text-lg text-white hover:bg-[#115e59] sm:text-xl">
                   <Bot className="mr-2 h-5 w-5" />
-                  Solve your doubt using chat
+                  Ask OneChain AI Assistant
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -114,11 +114,11 @@ export default function HomePage() {
 
             <Card className="relative w-full overflow-hidden rounded-3xl border-white/70 bg-white/90 p-5 shadow-[0_20px_50px_rgba(2,8,23,0.12)] animate-enter-up-delay sm:p-6">
               <div className="absolute right-5 top-5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                Agent Ready
+                Developer Ready
               </div>
-              <p className="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Agent Command</p>
-              <h3 className="mt-3 text-2xl font-semibold text-slate-900 sm:text-3xl">Build app on OneChain using agent</h3>
-              <p className="mt-2 text-sm text-slate-600 sm:text-base">Use this command on your agent.</p>
+              <p className="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Automation Command</p>
+              <h3 className="mt-3 text-2xl font-semibold text-slate-900 sm:text-3xl">Load ONEbox workflow into your agent</h3>
+              <p className="mt-2 text-sm text-slate-600 sm:text-base">Use this when you want to scaffold and automate OneChain tasks from your coding agent.</p>
 
               <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50/80 p-3 sm:p-4">
                 <p className="mb-1.5 text-sm font-medium text-slate-500">Curl Command</p>
@@ -142,17 +142,17 @@ export default function HomePage() {
               <Card className="rounded-2xl border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(2,8,23,0.06)]">
                 <Rocket className="h-6 w-6 text-cyan-700" />
                 <p className="mt-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Fast Start</p>
-                <p className="mt-1 text-base font-semibold text-slate-800">Scaffold to runnable app in minutes</p>
+                <p className="mt-1 text-base font-semibold text-slate-800">Connect wallet, switch network, and start in minutes</p>
               </Card>
               <Card className="rounded-2xl border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(2,8,23,0.06)]">
                 <Layers className="h-6 w-6 text-teal-700" />
-                <p className="mt-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Full Stack</p>
-                <p className="mt-1 text-base font-semibold text-slate-800">Move contract + frontend + wallet</p>
+                <p className="mt-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Core Toolkit</p>
+                <p className="mt-1 text-base font-semibold text-slate-800">Faucet, balances, PTB builder, and transaction tracking</p>
               </Card>
               <Card className="rounded-2xl border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(2,8,23,0.06)]">
                 <Shield className="h-6 w-6 text-orange-600" />
-                <p className="mt-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Validated</p>
-                <p className="mt-1 text-base font-semibold text-slate-800">Build, deploy, verify done criteria</p>
+                <p className="mt-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Guided Delivery</p>
+                <p className="mt-1 text-base font-semibold text-slate-800">AI support plus docs to build confidently on testnet</p>
               </Card>
             </div>
           </div>
@@ -161,23 +161,23 @@ export default function HomePage() {
         <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="rounded-2xl border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(2,8,23,0.06)] animate-enter-up">
             <Briefcase className="h-6 w-6 text-[#0f766e]" />
-            <h4 className="mt-3 text-lg font-semibold text-slate-900">Enterprise-ready layout</h4>
-            <p className="mt-1 text-base text-slate-600">Professional visual hierarchy and CTA clarity.</p>
+            <h4 className="mt-3 text-lg font-semibold text-slate-900">Wallet and Network Control</h4>
+            <p className="mt-1 text-base text-slate-600">Connect supported wallets, copy addresses, and switch OneChain networks.</p>
           </Card>
           <Card className="rounded-2xl border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(2,8,23,0.06)] animate-enter-up-delay">
             <Bot className="h-6 w-6 text-[#0284c7]" />
-            <h4 className="mt-3 text-lg font-semibold text-slate-900">Agent-first prompt path</h4>
-            <p className="mt-1 text-base text-slate-600">Dedicated button to start app generation workflow.</p>
+            <h4 className="mt-3 text-lg font-semibold text-slate-900">AI Assistant and Support</h4>
+            <p className="mt-1 text-base text-slate-600">Get help for Move, PTBs, smart contracts, and OneChain development flow.</p>
           </Card>
           <Card className="rounded-2xl border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(2,8,23,0.06)] animate-enter-up">
             <Copy className="h-6 w-6 text-[#f97316]" />
-            <h4 className="mt-3 text-lg font-semibold text-slate-900">Visible copyable command</h4>
-            <p className="mt-1 text-base text-slate-600">Clean, one-click copy for your curl command.</p>
+            <h4 className="mt-3 text-lg font-semibold text-slate-900">Testnet Execution Toolkit</h4>
+            <p className="mt-1 text-base text-slate-600">Request OCT, inspect balances and assets, run PTBs, and review transactions.</p>
           </Card>
           <Card className="rounded-2xl border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(2,8,23,0.06)] animate-enter-up-delay">
             <Sparkles className="h-6 w-6 text-[#7c3aed]" />
-            <h4 className="mt-3 text-lg font-semibold text-slate-900">Subtle animation system</h4>
-            <p className="mt-1 text-base text-slate-600">Floating gradients and staged entrance motion.</p>
+            <h4 className="mt-3 text-lg font-semibold text-slate-900">Docs and Resources</h4>
+            <p className="mt-1 text-base text-slate-600">Jump to SDK docs, explorer links, quick references, and onboarding guides.</p>
           </Card>
         </section>
       </main>
