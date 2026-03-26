@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Send, Bot, User, Lightbulb, ArrowLeft, Zap, ArrowDown } from "lucide-react"
 import Link from "next/link"
 import { searchOneChainKnowledge } from "@/lib/chat-ai"
+import { useSearchParams } from "next/navigation"
 
 interface Message {
   id: string
@@ -20,6 +21,7 @@ interface Message {
 interface ChatPageProps {}
 
 export default function ChatPage({}: ChatPageProps) {
+  const searchParams = useSearchParams()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -63,6 +65,14 @@ export default function ChatPage({}: ChatPageProps) {
   useEffect(() => {
     setHydrated(true)
   }, [])
+
+  useEffect(() => {
+    const prompt = searchParams.get("prompt")
+    if (prompt) {
+      setInput(prompt)
+      textareaRef.current?.focus()
+    }
+  }, [searchParams])
 
   const formatTime = (timestamp: string) => {
     if (!hydrated) return ''

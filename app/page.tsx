@@ -3,261 +3,181 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Wallet, Zap, Code, History, Coins, TestTube, Bot, MessageCircle, Play, BookOpen, Github, ExternalLink } from "lucide-react"
+import { ArrowRight, Bot, Briefcase, Copy, Github, Layers, Rocket, Shield, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { toast } from "sonner"
+
+const AGENT_SKILL_URL = process.env.NEXT_PUBLIC_AGENT_SKILL_URL || "https://onebox-app.vercel.app/skill.md"
 
 export default function HomePage() {
+  const curlCommand = `curl -s ${AGENT_SKILL_URL}`
+  const chatPrompt = "Solve your doubt using chat."
+
+  const copyText = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      toast.success(`${label} copied`)
+    } catch {
+      toast.error(`Failed to copy ${label.toLowerCase()}`)
+    }
+  }
+
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-900/80">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">ONEbox</h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400">OneChain Development Portal</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                Testnet Ready
-              </Badge>
-              <Link href="/dashboard">
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                  Dashboard
-                </Button>
-              </Link>
-            </div>
+    <div className="relative min-h-screen overflow-x-clip bg-[#f5f8f7] text-slate-900">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -left-24 top-[-6rem] h-72 w-72 rounded-full bg-[#0d9488]/25 blur-3xl animate-float-slow" />
+        <div className="absolute right-[-6rem] top-24 h-80 w-80 rounded-full bg-[#f97316]/20 blur-3xl animate-float-medium" />
+        <div className="absolute bottom-[-8rem] left-1/3 h-96 w-96 rounded-full bg-[#0284c7]/18 blur-3xl animate-float-slow" />
+      </div>
+
+      <header className="sticky top-0 z-40 border-b border-white/30 bg-white/70 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.18em] text-teal-700 uppercase">OneChain Build System</p>
+            <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">ONEbox</h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <Badge className="rounded-full border border-teal-300 bg-teal-100 px-3 py-1 text-teal-800">
+              Professional Workflow
+            </Badge>
+            <Link href="/dashboard">
+              <Button className="rounded-full bg-slate-900 px-5 text-white hover:bg-slate-800">Dashboard</Button>
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
-        <div className="relative container mx-auto px-4 py-16 sm:py-24">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl dark:text-white">
-              Build on{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                OneChain
-              </span>
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Complete development toolkit for OneChain blockchain. Test transactions, manage wallets, 
-              explore the ecosystem, and build the future of decentralized applications.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link href="/dashboard">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                  <Play className="mr-2 h-4 w-4" />
-                  Launch Dashboard
-                  <ArrowRight className="ml-2 h-4 w-4" />
+      <main className="mx-auto flex w-full max-w-7xl flex-col gap-16 px-5 py-14 sm:px-8 lg:py-20">
+        <section className="space-y-8">
+          <div className="mx-auto w-full max-w-6xl space-y-10 animate-enter-up">
+            <Badge className="rounded-full border border-slate-300/60 bg-white/85 px-5 py-2 text-sm text-slate-700 shadow-sm">
+              <Sparkles className="mr-2 h-3.5 w-3.5 text-amber-500" />
+              Ship OneChain apps with AI-assisted execution
+            </Badge>
+
+            <div className="space-y-6">
+              <h2 className="text-5xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+                Build polished
+                <span className="block bg-gradient-to-r from-[#0f766e] via-[#0284c7] to-[#f97316] bg-clip-text text-transparent">
+                  OneChain applications
+                </span>
+                from prompt to deploy.
+              </h2>
+              <p className="max-w-4xl text-lg leading-relaxed text-slate-600 sm:text-xl">
+                ONEbox gives your agent a production-grade skill profile so it can scaffold contracts, wire frontend,
+                deploy to testnet, and validate flow without getting stuck in planning loops.
+              </p>
+            </div>
+
+            <Card className="relative w-full overflow-hidden rounded-3xl border-white/70 bg-white/90 p-5 shadow-[0_20px_50px_rgba(2,8,23,0.12)] animate-enter-up-delay sm:p-6">
+              <div className="absolute right-5 top-5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                Agent Ready
+              </div>
+              <p className="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Agent Command</p>
+              <h3 className="mt-3 text-2xl font-semibold text-slate-900 sm:text-3xl">Build app on OneChain using agent</h3>
+              <p className="mt-2 text-sm text-slate-600 sm:text-base">Use this command on your agent.</p>
+
+              <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50/80 p-3 sm:p-4">
+                <p className="mb-1.5 text-sm font-medium text-slate-500">Curl Command</p>
+                <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
+                  <p className="flex-1 break-all font-mono text-sm text-slate-700 sm:text-base">{curlCommand}</p>
+                  <Button
+                    variant="outline"
+                    size="default"
+                    className="h-9 rounded-full px-4"
+                    onClick={() => copyText(curlCommand, "Curl command")}
+                  >
+                    <Copy className="mr-1.5 h-4 w-4" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <Link href={`/chat?prompt=${encodeURIComponent(chatPrompt)}`}>
+                <Button size="lg" className="h-14 rounded-full bg-[#0f766e] px-7 text-base text-white hover:bg-[#115e59] sm:text-lg">
+                  <Bot className="mr-2 h-5 w-5" />
+                  Solve your doubt using chat
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/docs">
-                <Button variant="outline" size="lg">
-                  <BookOpen className="mr-2 h-4 w-4" />
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-14 rounded-full border-slate-300 bg-white/80 px-7 text-base text-slate-700 hover:bg-white sm:text-lg"
+                >
                   View Documentation
                 </Button>
               </Link>
             </div>
-          </div>
 
-          {/* Feature Cards */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="p-6 hover:shadow-lg transition-shadow border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-              <Wallet className="h-10 w-10 text-blue-600 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Wallet Integration</h3>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">
-                Connect and manage OneChain wallets with seamless integration
-              </p>
-            </Card>
-            <Card className="p-6 hover:shadow-lg transition-shadow border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-              <Bot className="h-10 w-10 text-purple-600 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">AI Assistant</h3>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">
-                ChatGPT-powered assistant for OneChain development questions
-              </p>
-            </Card>
-            <Card className="p-6 hover:shadow-lg transition-shadow border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-              <TestTube className="h-10 w-10 text-emerald-600 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">PTB Simulator</h3>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">
-                Test programmable transaction blocks before deployment
-              </p>
-            </Card>
-            <Card className="p-6 hover:shadow-lg transition-shadow border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-              <Coins className="h-10 w-10 text-orange-600 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Testnet Faucet</h3>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">
-                Get test tokens instantly for development and testing
-              </p>
-            </Card>
-            <Card className="p-6 hover:shadow-lg transition-shadow border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-              <History className="h-10 w-10 text-red-600 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Transaction History</h3>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">
-                Comprehensive transaction tracking and analysis
-              </p>
-            </Card>
-            <Card className="p-6 hover:shadow-lg transition-shadow border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-              <Code className="h-10 w-10 text-indigo-600 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Developer Tools</h3>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">
-                Advanced debugging and development utilities
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Access Section */}
-      <section className="py-16 bg-white dark:bg-slate-900">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
-              Quick Access
-            </h2>
-            <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Jump directly to the tools you need for OneChain development
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Link href="/dashboard">
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-                <div className="text-center">
-                  <Zap className="h-8 w-8 text-blue-600 mx-auto mb-3" />
-                  <h3 className="font-semibold mb-2">Dashboard</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">Access all development tools</p>
-                </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Card className="rounded-2xl border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(2,8,23,0.06)]">
+                <Rocket className="h-6 w-6 text-cyan-700" />
+                <p className="mt-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Fast Start</p>
+                <p className="mt-1 text-base font-semibold text-slate-800">Scaffold to runnable app in minutes</p>
               </Card>
-            </Link>
-            
-            <Link href="/chat">
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-                <div className="text-center">
-                  <MessageCircle className="h-8 w-8 text-purple-600 mx-auto mb-3" />
-                  <h3 className="font-semibold mb-2">AI Assistant</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">Get instant development help</p>
-                </div>
+              <Card className="rounded-2xl border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(2,8,23,0.06)]">
+                <Layers className="h-6 w-6 text-teal-700" />
+                <p className="mt-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Full Stack</p>
+                <p className="mt-1 text-base font-semibold text-slate-800">Move contract + frontend + wallet</p>
               </Card>
-            </Link>
-            
-            <Link href="/docs">
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-                <div className="text-center">
-                  <BookOpen className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
-                  <h3 className="font-semibold mb-2">Documentation</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">Browse guides and references</p>
-                </div>
+              <Card className="rounded-2xl border-white/70 bg-white/80 p-5 shadow-[0_10px_30px_rgba(2,8,23,0.06)]">
+                <Shield className="h-6 w-6 text-orange-600" />
+                <p className="mt-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Validated</p>
+                <p className="mt-1 text-base font-semibold text-slate-800">Build, deploy, verify done criteria</p>
               </Card>
-            </Link>
-            
-            <a 
-              href="https://doc-testnet.onelabs.cc" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-slate-200/60 bg-white/80 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-800/80">
-                <div className="text-center">
-                  <ExternalLink className="h-8 w-8 text-orange-600 mx-auto mb-3" />
-                  <h3 className="font-semibold mb-2">Official Docs</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">OneChain documentation</p>
-                </div>
-              </Card>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-700">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">
-              OneChain Development Made Easy
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div>
-                <div className="text-3xl font-bold text-blue-600">10+</div>
-                <div className="text-slate-600 dark:text-slate-300">PTB Presets</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-purple-600">∞</div>
-                <div className="text-slate-600 dark:text-slate-300">Test Tokens</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-emerald-600">24/7</div>
-                <div className="text-slate-600 dark:text-slate-300">Network Access</div>
-              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-slate-900 dark:bg-slate-950">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Start Building?
-          </h2>
-          <p className="text-slate-300 mb-8 max-w-2xl mx-auto">
-            Join thousands of developers building the future of decentralized applications on OneChain.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                <Play className="mr-2 h-4 w-4" />
-                Launch Dashboard
-              </Button>
-            </Link>
-            <a 
-              href="https://github.com/onechain-lab" 
-              target="_blank" 
+        <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <Card className="rounded-2xl border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(2,8,23,0.06)] animate-enter-up">
+            <Briefcase className="h-6 w-6 text-[#0f766e]" />
+            <h4 className="mt-3 text-lg font-semibold text-slate-900">Enterprise-ready layout</h4>
+            <p className="mt-1 text-base text-slate-600">Professional visual hierarchy and CTA clarity.</p>
+          </Card>
+          <Card className="rounded-2xl border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(2,8,23,0.06)] animate-enter-up-delay">
+            <Bot className="h-6 w-6 text-[#0284c7]" />
+            <h4 className="mt-3 text-lg font-semibold text-slate-900">Agent-first prompt path</h4>
+            <p className="mt-1 text-base text-slate-600">Dedicated button to start app generation workflow.</p>
+          </Card>
+          <Card className="rounded-2xl border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(2,8,23,0.06)] animate-enter-up">
+            <Copy className="h-6 w-6 text-[#f97316]" />
+            <h4 className="mt-3 text-lg font-semibold text-slate-900">Visible copyable command</h4>
+            <p className="mt-1 text-base text-slate-600">Clean, one-click copy for your curl command.</p>
+          </Card>
+          <Card className="rounded-2xl border-white/70 bg-white/80 p-6 shadow-[0_10px_30px_rgba(2,8,23,0.06)] animate-enter-up-delay">
+            <Sparkles className="h-6 w-6 text-[#7c3aed]" />
+            <h4 className="mt-3 text-lg font-semibold text-slate-900">Subtle animation system</h4>
+            <p className="mt-1 text-base text-slate-600">Floating gradients and staged entrance motion.</p>
+          </Card>
+        </section>
+      </main>
+
+      <footer className="border-t border-white/40 bg-white/60 py-6 backdrop-blur-lg">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 px-5 text-sm text-slate-600 sm:flex-row sm:px-8">
+          <p>ONEbox •.   Made with ❤️ for the OneChain Community</p>
+          <div className="flex items-center gap-4">
+            <Link href="/docs" className="hover:text-slate-900 transition-colors">Docs</Link>
+            <a
+              href="https://doc-testnet.onelabs.cc/typescript"
+              target="_blank"
               rel="noopener noreferrer"
+              className="hover:text-slate-900 transition-colors"
             >
-              <Button variant="outline" size="lg" className="border-slate-600 text-slate-300 hover:bg-slate-800">
-                <Github className="mr-2 h-4 w-4" />
-                View on GitHub
-              </Button>
+              TypeScript SDK
             </a>
-          </div>
-        </div>
-      </section>
-
-      <footer className="py-8 border-t border-slate-200/60 dark:border-slate-700/60 bg-white/80 dark:bg-slate-900/80">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-4">
-              <span>Built for OneChain developers</span>
-              <span className="hidden sm:inline">•</span>
-              <Link 
-                href="/docs"
-                className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
-              >
-                Documentation
-              </Link>
-              <span className="hidden sm:inline">•</span>
-              <a
-                href="https://doc-testnet.onelabs.cc/typescript"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
-              >
-                TypeScript SDK
-              </a>
-              <span className="hidden sm:inline">•</span>
-              <a
-                href="https://onescan.cc"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
-              >
-                Explorer
-              </a>
-            </div>
-            <div className="text-xs">Made with ❤️ for the OneChain community</div>
+            <a
+              href="https://github.com/sambitsargam/ONEbox"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-slate-900 transition-colors"
+            >
+              <Github className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </footer>
