@@ -24,8 +24,7 @@ const { networkConfig } = createNetworkConfig({
 })
 
 const queryClient = new QueryClient()
-const isUnsafeBurnerEnabled =
-  process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_ENABLE_BURNER === "true"
+const isUnsafeBurnerEnabled = true
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
