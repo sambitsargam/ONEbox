@@ -24,6 +24,8 @@ const { networkConfig } = createNetworkConfig({
 })
 
 const queryClient = new QueryClient()
+const isUnsafeBurnerEnabled =
+  process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_ENABLE_BURNER === "true"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -31,7 +33,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
         <WalletProvider 
           autoConnect={false}
-          enableUnsafeBurner={process.env.NODE_ENV === 'development'}
+          enableUnsafeBurner={isUnsafeBurnerEnabled}
           preferredWallets={["OneChain Wallet", "OneLabs Wallet"]}
         >
           {children}
