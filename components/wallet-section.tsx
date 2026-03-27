@@ -314,8 +314,8 @@ export function WalletSection() {
           </>
         )}
 
-        {/* Development Burner Wallet */}
-        {process.env.NODE_ENV === "development" && (
+        {/* Burner Wallet Tools */}
+        {isUnsafeBurnerEnabled && (
           <div className="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3">
             <Button
               variant="outline"
