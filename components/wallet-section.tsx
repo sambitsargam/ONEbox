@@ -14,6 +14,8 @@ import { logWalletDebugInfo } from "@/lib/wallet-utils"
 import { useEffect, useState } from "react"
 
 const DEV_BURNER_RECONNECT_KEY = "onebox:dev-burner:reconnect"
+const isUnsafeBurnerEnabled =
+  process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_ENABLE_BURNER === "true"
 
 type ExportableDevKeypair = {
   address: string
@@ -47,7 +49,7 @@ export function WalletSection() {
 
   useEffect(() => {
     const shouldReconnect =
-      process.env.NODE_ENV === "development" &&
+      isUnsafeBurnerEnabled &&
       isClient &&
       typeof window !== "undefined" &&
       window.sessionStorage.getItem(DEV_BURNER_RECONNECT_KEY) === "1"
